@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Пинчеры на базе — Fantasy MLB 2026</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#fff;--bg2:#f8fafc;--bg3:#f1f5f9;--text:#1e293b;--text2:#64748b;--text3:#94a3b8;--border:#e2e8f0;--border2:#cbd5e1;--info-bg:#eff6ff;--info:#2563eb;--success-bg:#f0fdf4;--success:#16a34a;--danger-bg:#fef2f2;--danger:#dc2626;--warn:#d97706;--font:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+@media(prefers-color-scheme:dark){:root{--bg:#0f172a;--bg2:#1e293b;--bg3:#334155;--text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;--border:#334155;--border2:#475569;--info-bg:#1e3a5f;--info:#60a5fa;--success-bg:#14532d;--success:#4ade80;--danger-bg:#450a0a;--danger:#f87171;--warn:#fbbf24}}
+body{font-family:var(--font);background:var(--bg);color:var(--text);padding:16px;max-width:1400px;margin:0 auto}
+h1{font-size:20px;font-weight:600;margin-bottom:2px}
+.sub{font-size:13px;color:var(--text2);margin-bottom:16px}
+.controls{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.controls .sep{flex:1}
+.controls label{font-size:11px;color:var(--text3)}
+.btn{padding:5px 14px;border-radius:8px;border:none;cursor:pointer;font-weight:500;font-size:12px;background:transparent;color:var(--text2);transition:all .15s}
+.btn.on{background:var(--info-bg);color:var(--info)}
+.btn:hover{background:var(--bg3)}
+.wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--border)}
+table{border-collapse:collapse;width:100%;font-size:12px}
+th{padding:6px 5px;font-weight:500;font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;text-align:center;background:var(--bg);border-bottom:1.5px solid var(--border2);position:sticky;top:0;z-index:2}
+th.sec{color:var(--info);background:var(--info-bg);border-bottom:1.5px solid var(--info)}
+th.name,td.name{text-align:left;min-width:160px;position:sticky;left:0;z-index:1;background:var(--bg)}
+th.name{z-index:3}
+td{padding:5px 5px;text-align:center;border-bottom:1px solid var(--border);white-space:nowrap}
+td.name{font-weight:500}
+tr.you td{background:var(--info-bg)!important}
+tr.you td.name{background:var(--info-bg)!important}
+tr:hover td{background:var(--bg2)}
+tr.you:hover td{background:var(--info-bg)!important}
+.mgr{color:var(--text3);font-size:11px;font-weight:400}
+.badge{display:inline-block;font-size:9px;padding:1px 5px;border-radius:4px;font-weight:600;margin-left:4px}
+.badge-you{background:var(--success-bg);color:var(--success)}
+.rank-num{color:var(--text3);font-size:11px;margin-right:3px}
+.pct{font-weight:600;font-size:13px}
+.wlt{font-size:10px;color:var(--text3)}
+.medal{font-weight:700;font-size:14px;color:var(--warn)}
+.top1{background:var(--success-bg)}
+.top3{background:#dcfce74d}
+.bot3{background:#fee2e24d}
+.bot1{background:var(--danger-bg)}
+.summary td{font-size:11px;font-weight:500}
+.summary-best td{color:var(--success)}
+.summary-avg td{color:var(--text2)}
+.summary-worst td{color:var(--danger)}
+.summary-yours td{color:var(--info)}
+.summary td.name{font-size:11px}
+.legend{margin-top:8px;font-size:11px;color:var(--text3);display:flex;gap:12px;flex-wrap:wrap}
+.legend span{display:inline-flex;align-items:center;gap:4px}
+.leg-box{width:14px;height:14px;border-radius:3px;display:inline-block}
+select{padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:12px}
+</style>
+</head>
+<body>
+<h1>⚾ Пинчеры на базе</h1>
+<div class="sub">Yahoo Fantasy MLB 2026 · League 43533 · 12 teams · Head-to-Head</div>
+
+<div class="controls">
+  <button class="btn on" data-view="all" onclick="setView('all')">All stats</button>
+  <button class="btn" data-view="bat" onclick="setView('bat')">Batting</button>
+  <button class="btn" data-view="pit" onclick="setView('pit')">Pitching</button>
+  <div class="sep"></div>
+  <label>Period:</label>
+  <select id="period" onchange="render()">
+    <option value="season">Season total</option>
+    <option value="1">Week 1</option>
+  </select>
+  <label style="margin-left:8px">Sort:</label>
+  <select id="sortBy" onchange="render()">
+    <option value="rank">By rank</option>
+    <option value="medals">By medals</option>
+    <option value="name">A-Z</option>
+  </select>
+</div>
+
+<div class="wrap"><table id="tbl"></table></div>
+
+<div class="legend">
+  <span><span class="leg-box" style="background:var(--success-bg)"></span> #1 in category</span>
+  <span><span class="leg-box" style="background:#dcfce74d;border:1px solid #dcfce7"></span> Top 3</span>
+  <span><span class="leg-box" style="background:#fee2e24d;border:1px solid #fee2e2"></span> Bottom 3</span>
+  <span><span class="leg-box" style="background:var(--danger-bg)"></span> Last</span>
+</div>
+
+<script>
+const STAT_META={
+  "7":{n:"R",c:"bat",b:"hi"},"8":{n:"H",c:"bat",b:"hi"},"9":{n:"HR",c:"bat",b:"hi"},
+  "10":{n:"RBI",c:"bat",b:"hi"},"11":{n:"SB",c:"bat",b:"hi"},"12":{n:"BB",c:"bat",b:"hi"},
+  "13":{n:"K",c:"bat",b:"lo"},"3":{n:"AVG",c:"bat",b:"hi"},"16":{n:"OBP",c:"bat",b:"hi"},
+  "18":{n:"OPS",c:"bat",b:"hi"},"21":{n:"TB",c:"bat",b:"hi"},
+  "50":{n:"IP",c:"pit"},"28":{n:"W",c:"pit",b:"hi"},"29":{n:"SV",c:"pit",b:"hi"},
+  "31":{n:"HLD",c:"pit",b:"hi"},"32":{n:"QS",c:"pit",b:"hi"},"38":{n:"WHIP",c:"pit",b:"lo"},
+  "42":{n:"K",c:"pit",b:"hi"},"48":{n:"BB/9",c:"pit",b:"lo"},"26":{n:"ERA",c:"pit",b:"lo"},
+  "83":{n:"NSV",c:"pit",b:"hi"},"84":{n:"NSVH",c:"pit",b:"hi"},
+  "39":{n:"K/9",c:"pit",b:"hi"}
+};
+const BAT=["7","8","9","10","11","12","13","3","16","18","21"];
+const PIT=["50","28","29","31","32","38","42","48","26","83","84"];
+
+// ===== DATA: each week and season totals =====
+const WEEKS_DATA = {
+  "season": [
+    {id:1,name:"Moscow Salpballs",mgr:"salp",div:1,rank:5,w:11,l:10,t:1,pct:".523",stats:{"7":"19","8":"29","9":"16","10":"10","11":"0","12":"3","13":"16","3":".230","16":"3","18":"15","21":"33","50":"42.1","28":"1","29":"4","31":"0","32":"0","38":"9","39":"15","42":"44","48":"3","26":"5.74","83":"2","84":"3"}},
+    {id:2,name:"Galilee Paratroopers",mgr:"Stas",div:2,rank:4,w:10,l:6,t:6,pct:".591",you:true,stats:{"7":"18","8":"38","9":"29","10":"2","11":"0","12":"7","13":"17","3":".286","16":"2","18":"19","21":"34","50":"28.1","28":"0","29":"3","31":"0","32":"1","38":"3","39":"6","42":"22","48":"1","26":"3.81","83":"2","84":"1"}},
+    {id:3,name:"Moscow Herding Beasts",mgr:"Nprmr",div:1,rank:6,w:8,l:8,t:6,pct:".500",stats:{"7":"19","8":"38","9":"22","10":"8","11":"0","12":"8","13":"16","3":".299","16":"3","18":"21","21":"39","50":"51.0","28":"2","29":"4","31":"0","32":"1","38":"6","39":"16","42":"75","48":"1","26":"3.18","83":"2","84":"0"}},
+    {id:4,name:"Boobs Blumbers",mgr:"Vel",div:2,rank:11,w:7,l:12,t:3,pct:".386",stats:{"7":"13","8":"25","9":"21","10":"1","11":"0","12":"3","13":"12","3":".210","16":"6","18":"12","21":"36","50":"58.0","28":"4","29":"3","31":"0","32":"0","38":"4","39":"24","42":"62","48":"3","26":"2.48","83":"5","84":"0"}},
+    {id:5,name:"NBG Oldboys",mgr:"Anton",div:1,rank:2,w:10,l:8,t:4,pct:".545",stats:{"7":"20","8":"35","9":"28","10":"4","11":"0","12":"3","13":"13","3":".299","16":"3","18":"20","21":"30","50":"25.2","28":"0","29":"2","31":"0","32":"4","38":"3","39":"16","42":"26","48":"0","26":"5.26","83":"0","84":"0"}},
+    {id:6,name:"Frankfurter Jungs",mgr:"Kirill",div:2,rank:10,w:6,l:10,t:6,pct:".409",stats:{"7":"19","8":"32","9":"23","10":"2","11":"0","12":"7","13":"25","3":".262","16":"2","18":"12","21":"25","50":"51.2","28":"3","29":"4","31":"0","32":"2","38":"7","39":"27","42":"60","48":"0","26":"5.40","83":"1","84":"1"}},
+    {id:7,name:"Moscow Dachshunds",mgr:"Artur",div:1,rank:8,w:10,l:11,t:1,pct:".477",stats:{"7":"17","8":"23","9":"10","10":"6","11":"2","12":"5","13":"10","3":".190","16":"2","18":"19","21":"42","50":"16.0","28":"2","29":"1","31":"0","32":"1","38":"2","39":"7","42":"17","48":"0","26":"3.38","83":"1","84":"2"}},
+    {id:8,name:"Japan man #17",mgr:"Павел",div:2,rank:1,w:12,l:7,t:3,pct:".614",stats:{"7":"17","8":"25","9":"19","10":"2","11":"0","12":"4","13":"15","3":".214","16":"3","18":"21","21":"33","50":"30.1","28":"1","29":"0","31":"0","32":"1","38":"2","39":"13","42":"33","48":"1","26":"2.37","83":"1","84":"2"}},
+    {id:9,name:"The Templars",mgr:"Andrey",div:1,rank:7,w:8,l:8,t:6,pct:".500",stats:{"7":"16","8":"30","9":"17","10":"6","11":"1","12":"6","13":"27","3":".222","16":"4","18":"23","21":"38","50":"28.0","28":"2","29":"3","31":"0","32":"1","38":"1","39":"15","42":"33","48":"1","26":"6.43","83":"2","84":"0"}},
+    {id:10,name:"Worrying Gnomes",mgr:"Alexandr",div:2,rank:3,w:12,l:7,t:3,pct:".614",stats:{"7":"14","8":"23","9":"17","10":"2","11":"1","12":"3","13":"6","3":".190","16":"0","18":"12","21":"29","50":"40.2","28":"3","29":"0","31":"0","32":"5","38":"5","39":"10","42":"42","48":"2","26":"3.98","83":"1","84":"1"}},
+    {id:11,name:"St.Petersburg Salt Lovers",mgr:"Elnar",div:1,rank:9,w:8,l:10,t:4,pct:".455",stats:{"7":"15","8":"28","9":"22","10":"6","11":"0","12":"0","13":"8","3":".275","16":"1","18":"10","21":"26","50":"45.0","28":"3","29":"1","31":"0","32":"3","38":"6","39":"12","42":"44","48":"0","26":"3.60","83":"3","84":"0"}},
+    {id:12,name:"Top-hat Bull Terriers",mgr:"Vsevolod",div:2,rank:12,w:7,l:12,t:3,pct:".386",stats:{"7":"14","8":"17","9":"11","10":"4","11":"0","12":"2","13":"11","3":".155","16":"5","18":"15","21":"25","50":"52.2","28":"2","29":"4","31":"0","32":"0","38":"13","39":"19","42":"55","48":"2","26":"5.98","83":"2","84":"2"}}
+  ],
+  "1": null // Week 1 = same as season so far (only 1 week played)
+};
+// Point week 1 to same data since only 1 week has been played
+WEEKS_DATA["1"] = WEEKS_DATA["season"];
+
+let curView = "all";
+
+function setView(v) {
+  curView = v;
+  document.querySelectorAll('.btn[data-view]').forEach(b => b.classList.toggle('on', b.dataset.view === v));
+  render();
+}
+
+function getRanks(teams, sid) {
+  const m = STAT_META[sid];
+  if (!m || !m.b) return {};
+  const vals = teams.map(t => ({id:t.id, v:parseFloat(t.stats[sid])||0}));
+  vals.sort((a,b) => m.b==="hi" ? b.v-a.v : a.v-b.v);
+  const r = {};
+  vals.forEach((x,i) => r[x.id] = i+1);
+  return r;
+}
+
+function cellClass(rank, n) {
+  if (!rank) return "";
+  const p = (rank-1)/(n-1);
+  if (p<=0.08) return "top1";
+  if (p<=0.25) return "top3";
+  if (p>=0.92) return "bot1";
+  if (p>=0.75) return "bot3";
+  return "";
+}
+
+function render() {
+  const period = document.getElementById("period").value;
+  const sortBy = document.getElementById("sortBy").value;
+  const teams = WEEKS_DATA[period];
+  if (!teams) { document.getElementById("tbl").innerHTML="<tr><td>No data for this period</td></tr>"; return; }
+
+  const batIds = curView==="pit" ? [] : BAT;
+  const pitIds = curView==="bat" ? [] : PIT;
+  const ids = [...batIds,...pitIds];
+  const n = teams.length;
+
+  const allR = {};
+  ids.forEach(s => allR[s] = getRanks(teams, s));
+
+  const medals = {};
+  teams.forEach(t => medals[t.id]=0);
+  ids.forEach(s => { if(!STAT_META[s]?.b) return; const r=allR[s]; teams.forEach(t => { if(r[t.id]===1) medals[t.id]++; }); });
+
+  let sorted = [...teams];
+  if (sortBy==="rank") sorted.sort((a,b)=>a.rank-b.rank);
+  else if (sortBy==="medals") sorted.sort((a,b)=>(medals[b.id]||0)-(medals[a.id]||0));
+  else sorted.sort((a,b)=>a.name.localeCompare(b.name));
+
+  let h = "<thead><tr><th class='name'>Team</th><th>W-L-T</th>";
+  if (batIds.length) h += `<th class='sec' colspan='${batIds.length}'>Batting</th>`;
+  if (pitIds.length) h += `<th class='sec' colspan='${pitIds.length}'>Pitching</th>`;
+  h += "<th>🏅</th></tr><tr><th class='name'></th><th>PCT</th>";
+  ids.forEach(s => h += `<th>${STAT_META[s]?.n||s}</th>`);
+  h += "<th>#1</th></tr></thead><tbody>";
+
+  sorted.forEach(t => {
+    const you = t.you ? " you" : "";
+    h += `<tr class='${you}'>`;
+    h += `<td class='name'><span class='rank-num'>#${t.rank}</span>${t.name}${t.you?"<span class='badge badge-you'>ты</span>":""}<br><span class='mgr'>${t.mgr} · Div ${t.div}</span></td>`;
+    h += `<td><span class='pct'>${t.pct}</span><br><span class='wlt'>${t.w}-${t.l}-${t.t}</span></td>`;
+    ids.forEach(s => {
+      const v = t.stats[s] || "—";
+      const r = allR[s]?.[t.id];
+      const cls = cellClass(r, n);
+      h += `<td class='${cls}'>${v}</td>`;
+    });
+    h += `<td class='medal'>${medals[t.id]||0}</td></tr>`;
+  });
+
+  // Summary rows
+  const vals = (sid) => teams.map(t => parseFloat(t.stats[sid])||0);
+  const fmtS = (sid, v) => {
+    const m = STAT_META[sid];
+    if (!m) return v;
+    if (sid==="3") return v.toFixed(3).replace(/^0/,"");
+    if (m.n==="WHIP"||m.n==="ERA"||m.n==="K/9"||m.n==="BB/9") return v.toFixed(2);
+    if (m.n==="IP") return v.toFixed(1);
+    return Math.round(v);
+  };
+
+  h += "<tr class='summary summary-best'><td class='name' style='background:var(--bg2)'>🟢 Best</td><td></td>";
+  ids.forEach(s => {
+    const m = STAT_META[s]; const vs = vals(s);
+    const v = m?.b==="hi" ? Math.max(...vs) : m?.b==="lo" ? Math.min(...vs) : "—";
+    h += `<td>${v==="—"?v:fmtS(s,v)}</td>`;
+  });
+  h += "<td></td></tr>";
+
+  h += "<tr class='summary summary-avg'><td class='name' style='background:var(--bg2)'>⊘ Average</td><td></td>";
+  ids.forEach(s => {
+    const vs = vals(s); const avg = vs.reduce((a,b)=>a+b,0)/vs.length;
+    h += `<td>${fmtS(s,avg)}</td>`;
+  });
+  h += "<td></td></tr>";
+
+  h += "<tr class='summary summary-worst'><td class='name' style='background:var(--bg2)'>🔴 Worst</td><td></td>";
+  ids.forEach(s => {
+    const m = STAT_META[s]; const vs = vals(s);
+    const v = m?.b==="hi" ? Math.min(...vs) : m?.b==="lo" ? Math.max(...vs) : "—";
+    h += `<td>${v==="—"?v:fmtS(s,v)}</td>`;
+  });
+  h += "<td></td></tr>";
+
+  const you = teams.find(t=>t.you);
+  if (you) {
+    h += "<tr class='summary summary-yours' style='background:var(--info-bg)'><td class='name' style='background:var(--info-bg)'>📊 Your rank</td><td></td>";
+    ids.forEach(s => {
+      const r = allR[s]?.[you.id];
+      const col = r<=3?"var(--success)":r>=10?"var(--danger)":"var(--text2)";
+      h += `<td style='color:${col};font-weight:600'>${r?"#"+r:"—"}</td>`;
+    });
+    h += "<td></td></tr>";
+  }
+
+  h += "</tbody>";
+  document.getElementById("tbl").innerHTML = h;
+}
+
+render();
+</script>
+</body>
+</html>
