@@ -6,19 +6,18 @@
 <title>Пинчеры на базе — Fantasy MLB 2026</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#fafaf9;--bg2:#f5f5f4;--bg3:#e7e5e4;--card:#fff;--text:#1c1917;--text2:#78716c;--text3:#a8a29e;--border:#e7e5e4;--border2:#d6d3d1;--accent:#7c3aed;--accent-bg:#f5f3ff;--accent2:#6d28d9;--gold:#f59e0b;--gold-bg:rgba(245,158,11,0.22);--success:#16a34a;--danger:#dc2626;--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
-@media(prefers-color-scheme:dark){:root{--bg:#1c1917;--bg2:#292524;--bg3:#44403c;--card:#292524;--text:#fafaf9;--text2:#a8a29e;--text3:#78716c;--border:#44403c;--border2:#57534e;--accent:#a78bfa;--accent-bg:rgba(167,139,250,0.1);--accent2:#8b5cf6;--gold:#fbbf24;--gold-bg:rgba(251,191,36,0.3);--success:#4ade80;--danger:#f87171}}
+:root{--bg:#fafaf9;--bg2:#f5f5f4;--bg3:#e7e5e4;--card:#fff;--text:#1c1917;--text2:#78716c;--text3:#a8a29e;--border:#e7e5e4;--border2:#d6d3d1;--accent:#7c3aed;--accent-bg:#f5f3ff;--gold:#f59e0b;--success:#16a34a;--danger:#dc2626;--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+@media(prefers-color-scheme:dark){:root{--bg:#1c1917;--bg2:#292524;--bg3:#44403c;--card:#292524;--text:#fafaf9;--text2:#a8a29e;--text3:#78716c;--border:#44403c;--border2:#57534e;--accent:#a78bfa;--accent-bg:rgba(167,139,250,0.1);--gold:#fbbf24;--success:#4ade80;--danger:#f87171}}
 body{font-family:var(--font);background:var(--bg);color:var(--text);padding:20px;max-width:1440px;margin:0 auto}
 h1{font-size:22px;font-weight:700;margin-bottom:2px;letter-spacing:-0.3px}
 .sub{font-size:13px;color:var(--text2);margin-bottom:20px}
 h2{font-size:13px;font-weight:600;margin:28px 0 8px;color:var(--text3);text-transform:uppercase;letter-spacing:1px}
 .tabs{display:flex;gap:4px;margin-bottom:20px;border-bottom:2px solid var(--border)}
-.tab{padding:10px 20px;font-size:13px;font-weight:600;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;background:none;border-top:none;border-left:none;border-right:none}
+.tab{padding:10px 20px;font-size:13px;font-weight:600;color:var(--text3);cursor:pointer;border:none;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;background:none}
 .tab.on{color:var(--accent);border-bottom-color:var(--accent)}
 .tab:hover:not(.on){color:var(--text2)}
-.page{display:none}
-.page.active{display:block}
-.controls{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+.page{display:none}.page.active{display:block}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
 .controls label{font-size:11px;color:var(--text3);font-weight:500}
 .wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border);background:var(--card);margin-bottom:4px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 table{border-collapse:collapse;width:100%;font-size:12px}
@@ -27,30 +26,53 @@ thead th.sec{color:var(--accent);background:var(--accent-bg);border-bottom:2px s
 th.name,td.name{text-align:left;min-width:170px;position:sticky;left:0;z-index:1;background:var(--card)}
 th.name{z-index:3}
 td{padding:6px 6px;text-align:center;border-bottom:1px solid var(--border);white-space:nowrap;font-size:12px;font-variant-numeric:tabular-nums}
-td.name{font-weight:600;font-size:12px}
+td.name{font-weight:600}
 tr:hover td{background:var(--bg2)!important}
 .mgr{color:var(--text3);font-size:10px;font-weight:400}
-.pct{font-weight:700;font-size:13px}
-.wlt{font-size:10px;color:var(--text3)}
+.pct{font-weight:700;font-size:13px}.wlt{font-size:10px;color:var(--text3)}
 .medal{font-weight:800;font-size:15px;color:var(--gold)}
 .summary td{font-size:11px;font-weight:600;background:var(--bg2)!important}
 .summary td.name{background:var(--bg2)!important}
-.s-best td{color:var(--success)}
-.s-avg td{color:var(--text2)}
-.s-worst td{color:var(--danger)}
+.s-best td{color:var(--success)}.s-avg td{color:var(--text2)}.s-worst td{color:var(--danger)}
 select{padding:5px 10px;border-radius:20px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:12px;font-weight:500}
-.legend{margin-top:6px;margin-bottom:16px;font-size:11px;color:var(--text3);display:flex;gap:12px;flex-wrap:wrap}
+.legend{margin-top:8px;margin-bottom:16px;font-size:11px;color:var(--text3);display:flex;gap:12px;flex-wrap:wrap}
 .legend span{display:inline-flex;align-items:center;gap:4px}
 .leg-box{width:14px;height:14px;border-radius:3px;display:inline-block;border:1px solid rgba(0,0,0,.06)}
 .h2h-header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
 .h2h-score{font-weight:800;font-size:22px;letter-spacing:1px;padding:4px 16px;border-radius:8px;background:var(--bg2)}
-.h2h-cat-row td{padding:8px 12px;font-size:13px}
-.h2h-cat-name{font-weight:600;color:var(--text2);text-align:center;font-size:12px;text-transform:uppercase;letter-spacing:.5px}
 .h2h-win{background:rgba(74,222,128,0.15);font-weight:700}
 .h2h-lose{background:rgba(248,113,113,0.1)}
 .h2h-tie{color:var(--text3)}
 .h2h-section-break{border-top:2px solid var(--accent)!important}
-</style>
+th.sortable{cursor:pointer}
+th.sortable:hover{color:var(--accent)}
+@media(max-width:700px){
+  body{padding:12px 8px}
+  h1{font-size:18px}
+  .sub{font-size:11px;margin-bottom:12px}
+  h2{font-size:11px;margin:20px 0 6px}
+  .tabs{gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{padding:8px 14px;font-size:12px;white-space:nowrap;flex-shrink:0}
+  .controls{gap:6px;margin-bottom:10px}
+  select{font-size:11px;padding:4px 8px}
+  table{font-size:11px}
+  thead th{padding:5px 3px;font-size:9px;letter-spacing:.3px}
+  td{padding:4px 3px;font-size:11px}
+  th.name,td.name{min-width:120px;max-width:140px;font-size:11px}
+  .mgr{font-size:9px}
+  .pct{font-size:11px}
+  .wlt{font-size:9px}
+  .medal{font-size:13px}
+  .wrap{border-radius:8px}
+  .legend{font-size:10px;gap:8px}
+  .leg-box{width:12px;height:12px}
+  .h2h-header{flex-direction:column;align-items:stretch;gap:8px}
+  .h2h-header select{width:100%;font-size:13px!important;padding:10px 12px!important}
+  .h2h-header>span:first-of-type{text-align:center}
+  .h2h-score{text-align:center;font-size:20px}
+  .summary td{font-size:10px}
+}</style>
 </head>
 <body>
 <h1>⚾ Пинчеры на базе</h1>
@@ -62,7 +84,6 @@ select{padding:5px 10px;border-radius:20px;border:1px solid var(--border);backgr
   <button class="tab" onclick="switchTab('power')">Power rankings</button>
 </div>
 
-<!-- LEAGUE PAGE -->
 <div class="page active" id="page-league">
   <div class="controls">
     <label>Period</label>
@@ -71,26 +92,21 @@ select{padding:5px 10px;border-radius:20px;border:1px solid var(--border);backgr
       <option value="1">Week 1</option>
     </select>
   </div>
-
   <h2>Stats</h2>
   <div class="wrap"><table id="tbl"></table></div>
-
   <h2>Rankings</h2>
   <div class="wrap"><table id="tblRank"></table></div>
-
   <h2>Average rank</h2>
   <div class="wrap"><table id="tblAvg"></table></div>
-
   <div class="legend">
-    <span><span class="leg-box" style="background:var(--gold)"></span> 1st (gold)</span>
-    <span><span class="leg-box" style="background:#bbe8c3"></span> 2nd–3rd</span>
+    <span><span class="leg-box" style="background:var(--gold)"></span> 1st</span>
+    <span><span class="leg-box" style="background:#bbe8c3"></span> Top 3</span>
     <span><span class="leg-box" style="background:#d8eedd"></span> Mid</span>
-    <span><span class="leg-box" style="background:#f0c8c8"></span> Low</span>
+    <span><span class="leg-box" style="background:#f0c8c8"></span> Bottom</span>
     <span><span class="leg-box" style="background:var(--card);border-color:var(--border)"></span> Last</span>
   </div>
 </div>
 
-<!-- H2H PAGE -->
 <div class="page" id="page-h2h">
   <div class="controls">
     <label>Period</label>
@@ -99,25 +115,27 @@ select{padding:5px 10px;border-radius:20px;border:1px solid var(--border);backgr
       <option value="1">Week 1</option>
     </select>
   </div>
-
   <div class="h2h-header">
     <select id="h2h-a" onchange="renderH2H()" style="font-size:14px;font-weight:600;padding:8px 14px"></select>
     <span style="font-weight:700;font-size:16px;color:var(--text3)">vs</span>
     <select id="h2h-b" onchange="renderH2H()" style="font-size:14px;font-weight:600;padding:8px 14px"></select>
     <span id="h2h-score" class="h2h-score"></span>
   </div>
-
   <div class="wrap"><table id="tblH2H"></table></div>
 </div>
 
-<!-- POWER RANKINGS PAGE -->
 <div class="page" id="page-power">
   <div class="wrap"><table id="tblPower"></table></div>
-  <div style="margin-top:8px;font-size:11px;color:var(--text3)">Simulated: each team's H2H category record vs all 11 opponents per week. W = would beat, L = would lose, T = would tie. Season = sum of all weeks. Sorted by win%.</div>
+  <div class="legend">
+    <span>Simulated H2H vs all 11 opponents per week.</span>
+    <span><span style="color:var(--success);font-weight:700">W</span> = would beat</span>
+    <span><span style="color:var(--danger);font-weight:600">L</span> = would lose</span>
+    <span><span style="color:var(--text3)">T</span> = would tie</span>
+  </div>
 </div>
 
 <script>
-const STAT_META={
+const SM={
   "60":{n:"H/AB",c:"bat",scoring:false},
   "7":{n:"R",c:"bat",b:"hi"},"8":{n:"H",c:"bat",b:"hi"},"9":{n:"1B",c:"bat",b:"hi"},
   "10":{n:"2B",c:"bat",b:"hi"},"11":{n:"3B",c:"bat",b:"hi"},"12":{n:"HR",c:"bat",b:"hi"},
@@ -131,9 +149,10 @@ const STAT_META={
 };
 const BAT=["60","7","8","9","10","11","12","13","16","18","21","3"];
 const PIT=["50","28","29","31","32","38","39","42","48","26","83","84"];
-const BAT_SCORING=BAT.filter(s=>STAT_META[s].scoring!==false);
-const PIT_SCORING=PIT.filter(s=>STAT_META[s].scoring!==false);
-const ALL_SCORING=[...BAT_SCORING,...PIT_SCORING];
+const BAT_S=BAT.filter(s=>SM[s].scoring!==false);
+const PIT_S=PIT.filter(s=>SM[s].scoring!==false);
+const ALL_S=[...BAT_S,...PIT_S];
+const ALL_IDS=[...BAT,...PIT];
 
 const WEEKS_DATA = {
   "season": [
@@ -154,350 +173,176 @@ const WEEKS_DATA = {
 };
 WEEKS_DATA["1"] = WEEKS_DATA["season"];
 
-const dark = () => matchMedia('(prefers-color-scheme:dark)').matches;
+const isDark=()=>matchMedia('(prefers-color-scheme:dark)').matches;
 
-function switchTab(tab) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+// --- UTILS ---
+function switchTab(tab){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelector(`.tab[onclick*="${tab}"]`).classList.add('on');
-  document.getElementById('page-' + tab).classList.add('active');
-  if (tab === 'h2h') renderH2H();
-  if (tab === 'power') renderPower();
+  document.getElementById('page-'+tab).classList.add('active');
+  if(tab==='h2h')renderH2H();
+  if(tab==='power')renderPower();
 }
 
-function getStatValue(t, sid) {
-  if (sid === "3") {
-    const hab = t.stats["60"];
-    if (hab && hab.includes("/")) {
-      const parts = hab.split("/");
-      const h = parseFloat(parts[0]);
-      const ab = parseFloat(parts[1]);
-      if (ab > 0) return h / ab;
-    }
+function getVal(t,sid){
+  if(sid==="3"){
+    const hab=t.stats["60"];
+    if(hab&&hab.includes("/")){const p=hab.split("/");const h=parseFloat(p[0]),ab=parseFloat(p[1]);if(ab>0)return h/ab;}
   }
-  return parseFloat(t.stats[sid]) || 0;
+  return parseFloat(t.stats[sid])||0;
 }
 
-function getRanks(teams, sid) {
-  const m = STAT_META[sid];
-  if (!m || !m.b) return {};
-  const vals = teams.map(t => ({id:t.id, v:getStatValue(t, sid)}));
-  vals.sort((a,b) => m.b==="hi" ? b.v-a.v : a.v-b.v);
-  if (sid === "31" && vals.every(x => x.v === 0)) {
-    const r = {}; vals.forEach(x => r[x.id] = 6); return r;
-  }
-  const r = {};
-  let i = 0;
-  while (i < vals.length) {
-    let j = i;
-    while (j < vals.length && vals[j].v === vals[i].v) j++;
-    const tiedRank = i + 1;
-    for (let k = i; k < j; k++) r[vals[k].id] = tiedRank;
-    i = j;
-  }
+function getRanks(teams,sid){
+  const m=SM[sid];if(!m||!m.b)return {};
+  const vals=teams.map(t=>({id:t.id,v:getVal(t,sid)}));
+  vals.sort((a,b)=>m.b==="hi"?b.v-a.v:a.v-b.v);
+  if(sid==="31"&&vals.every(x=>x.v===0)){const r={};vals.forEach(x=>r[x.id]=6);return r;}
+  const r={};let i=0;
+  while(i<vals.length){let j=i;while(j<vals.length&&vals[j].v===vals[i].v)j++;for(let k=i;k<j;k++)r[vals[k].id]=i+1;i=j;}
   return r;
 }
 
-function colorForRank(rank, n) {
-  if (rank === 1) return dark() ? "rgba(251,191,36,0.3)" : "rgba(245,158,11,0.22)";
-  if (n <= 2) return "transparent";
-  const t = (rank - 2) / (n - 2);
-  if (dark()) {
-    const r = Math.round(74 + t * (180 - 74));
-    const g = Math.round(180 - t * (180 - 74));
-    const b = Math.round(100 + t * (100 - 100));
-    const a = (0.3 - t * 0.05).toFixed(2);
-    return `rgba(${r},${g},${b},${a})`;
-  } else {
-    const r = Math.round(187 + t * (252 - 187));
-    const g = Math.round(232 + t * (200 - 232));
-    const b = Math.round(195 + t * (200 - 195));
-    return `rgb(${r},${g},${b})`;
-  }
+function colorForRank(rank,n){
+  if(rank===1)return isDark()?"rgba(251,191,36,0.3)":"rgba(245,158,11,0.22)";
+  if(rank===n)return"transparent";
+  if(n<=2)return"transparent";
+  const t=(rank-2)/(n-3);
+  if(isDark()){return`rgba(${Math.round(74+t*106)},${Math.round(180-t*106)},100,${(0.3-t*0.05).toFixed(2)})`;}
+  return`rgb(${Math.round(187+t*65)},${Math.round(232-t*32)},${Math.round(195+t*5)})`;
 }
 
-function goldText(rank) {
-  return rank === 1 ? `font-weight:800;color:${dark()?'#fbbf24':'#b45309'}` : "";
-}
+function goldTxt(rank){return rank===1?`font-weight:800;color:${isDark()?'#fbbf24':'#b45309'}`:"";}
+function fmtS(sid,v){if(sid==="3")return v.toFixed(3).replace(/^0/,"");if(sid==="26")return v.toFixed(2);return Math.round(v);}
+function fmtWLT(r){if(!r)return'<span style="color:var(--text3)">—</span>';return`<span style="color:var(--success);font-weight:700">${r.w}</span><span style="color:var(--text3)">-</span><span style="color:var(--danger);font-weight:600">${r.l}</span><span style="color:var(--text3)">-</span><span style="color:var(--text3)">${r.t}</span>`;}
 
-function fmtS(sid, v) {
-  if (sid==="3") return v.toFixed(3).replace(/^0/,"");
-  if (sid==="26") return v.toFixed(2);
-  return Math.round(v);
-}
-
-function render() {
-  const period = document.getElementById("period").value;
-  const teams = WEEKS_DATA[period];
-  if (!teams) return;
-
-  const ids = [...BAT,...PIT];
-  const scoringIds = ALL_SCORING;
-  const n = teams.length;
-
-  const allR = {};
-  scoringIds.forEach(s => allR[s] = getRanks(teams, s));
-
-  const medals = {};
-  teams.forEach(t => medals[t.id]=0);
-  scoringIds.forEach(s => {
-    if (s === "31") { if (teams.every(t => (parseFloat(t.stats[s])||0) === 0)) return; }
-    const r=allR[s]; teams.forEach(t => { if(r[t.id]===1) medals[t.id]++; });
-  });
-
-  const sorted = [...teams].sort((a,b)=>a.name.localeCompare(b.name));
-
-  // TABLE 1: STATS
-  let h = `<thead><tr><th class='name'>Team</th><th>W-L-T</th><th class='sec' colspan='${BAT.length}'>Batting</th><th class='sec' colspan='${PIT.length}'>Pitching</th><th>🏅</th></tr><tr><th class='name'></th><th>PCT</th>`;
-  ids.forEach(s => h += `<th>${STAT_META[s]?.n||s}</th>`);
-  h += "<th>#1</th></tr></thead><tbody>";
-
-  sorted.forEach(t => {
-    h += "<tr>";
-    h += `<td class='name'>${t.name}<br><span class='mgr'>${t.mgr} · Div ${t.div}</span></td>`;
-    h += `<td><span class='pct'>${t.pct}</span><br><span class='wlt'>${t.w}-${t.l}-${t.t}</span></td>`;
-    ids.forEach(s => {
-      const v = t.stats[s] || "—";
-      const isScoring = STAT_META[s].scoring !== false;
-      const rank = isScoring ? allR[s]?.[t.id] : null;
-      const bg = rank ? colorForRank(rank, n) : "transparent";
-      const gt = rank ? goldText(rank) : "";
-      h += `<td style="background:${bg};${gt}">${v}</td>`;
-    });
-    h += `<td class='medal'>${medals[t.id]||0}</td></tr>`;
-  });
-
-  const vals = (sid) => teams.map(t => parseFloat(t.stats[sid])||0);
-  h += "<tr class='summary s-best'><td class='name'>Best</td><td></td>";
-  ids.forEach(s => { const m=STAT_META[s]; if(m.scoring===false){h+="<td></td>";return;} const vs=vals(s); h+=`<td>${fmtS(s, m.b==="hi"?Math.max(...vs):Math.min(...vs))}</td>`; });
-  h += "<td></td></tr>";
-  h += "<tr class='summary s-avg'><td class='name'>Average</td><td></td>";
-  ids.forEach(s => { const m=STAT_META[s]; if(m.scoring===false){h+="<td></td>";return;} const vs=vals(s); h+=`<td>${fmtS(s,vs.reduce((a,b)=>a+b,0)/vs.length)}</td>`; });
-  h += "<td></td></tr>";
-  h += "<tr class='summary s-worst'><td class='name'>Worst</td><td></td>";
-  ids.forEach(s => { const m=STAT_META[s]; if(m.scoring===false){h+="<td></td>";return;} const vs=vals(s); h+=`<td>${fmtS(s, m.b==="hi"?Math.min(...vs):Math.max(...vs))}</td>`; });
-  h += "<td></td></tr></tbody>";
-  document.getElementById("tbl").innerHTML = h;
-
-  // TABLE 2: RANKINGS
-  let h2 = `<thead><tr><th class='name'>Team</th><th class='sec' colspan='${BAT_SCORING.length}'>Batting</th><th class='sec' colspan='${PIT_SCORING.length}'>Pitching</th></tr><tr><th class='name'></th>`;
-  scoringIds.forEach(s => h2 += `<th>${STAT_META[s]?.n||s}</th>`);
-  h2 += "</tr></thead><tbody>";
-  sorted.forEach(t => {
-    h2 += `<tr><td class='name'>${t.name}<br><span class='mgr'>${t.mgr}</span></td>`;
-    scoringIds.forEach(s => {
-      const rank = allR[s]?.[t.id] || "—";
-      const bg = typeof rank==="number" ? colorForRank(rank,n) : "transparent";
-      const gt = typeof rank==="number" ? goldText(rank) : "";
-      h2 += `<td style="background:${bg};${gt}">${rank}</td>`;
-    });
-    h2 += "</tr>";
-  });
-  h2 += "</tbody>";
-  document.getElementById("tblRank").innerHTML = h2;
-
-  // TABLE 3: AVERAGE RANKS
-  const avgData = sorted.map(t => {
-    const bR = BAT_SCORING.map(s => allR[s]?.[t.id]||n);
-    const pR = PIT_SCORING.map(s => allR[s]?.[t.id]||n);
-    return { id:t.id, name:t.name, mgr:t.mgr,
-      bAvg: bR.reduce((a,b)=>a+b,0)/bR.length,
-      pAvg: pR.reduce((a,b)=>a+b,0)/pR.length,
-      tAvg: [...bR,...pR].reduce((a,b)=>a+b,0)/[...bR,...pR].length };
-  });
-  function rankAvgs(arr, key) { const s=[...arr].sort((a,b)=>a[key]-b[key]); const r={}; s.forEach((x,i)=>r[x.id]=i+1); return r; }
-  const bAR=rankAvgs(avgData,"bAvg"), pAR=rankAvgs(avgData,"pAvg"), tAR=rankAvgs(avgData,"tAvg");
-
-  let h3 = "<thead><tr><th class='name'>Team</th><th>Batting</th><th>Pitching</th><th>Total</th></tr></thead><tbody>";
-  avgData.forEach(t => {
-    h3 += `<tr><td class='name'>${t.name}<br><span class='mgr'>${t.mgr}</span></td>`;
-    const rb=bAR[t.id]; h3+=`<td style="background:${colorForRank(rb,n)};${goldText(rb)}">${t.bAvg.toFixed(1)}</td>`;
-    const rp=pAR[t.id]; h3+=`<td style="background:${colorForRank(rp,n)};${goldText(rp)}">${t.pAvg.toFixed(1)}</td>`;
-    const rt=tAR[t.id]; h3+=`<td style="background:${colorForRank(rt,n)};${goldText(rt)}">${t.tAvg.toFixed(1)}</td>`;
-    h3 += "</tr>";
-  });
-  h3 += "</tbody>";
-  document.getElementById("tblAvg").innerHTML = h3;
-}
-
-function renderH2H() {
-  const period = document.getElementById("period-h2h").value;
-  const teams = WEEKS_DATA[period];
-  if (!teams) return;
-
-  const selA = document.getElementById("h2h-a");
-  const selB = document.getElementById("h2h-b");
-  if (!selA.options.length) {
-    const byName = [...teams].sort((a,b)=>a.name.localeCompare(b.name));
-    byName.forEach(t => {
-      selA.innerHTML += `<option value="${t.id}"${t.id===2?" selected":""}>${t.name}</option>`;
-      selB.innerHTML += `<option value="${t.id}"${t.id===5?" selected":""}>${t.name}</option>`;
-    });
-  }
-
-  const tA = teams.find(t => t.id === parseInt(selA.value));
-  const tB = teams.find(t => t.id === parseInt(selB.value));
-  if (!tA || !tB) return;
-
-  let wins=0, losses=0, ties=0;
-  let rows = "";
-
-  ALL_SCORING.forEach((sid, idx) => {
-    const m = STAT_META[sid];
-    if (!m || !m.b) return;
-
-    const vA = getStatValue(tA, sid);
-    const vB = getStatValue(tB, sid);
-    const isSection = sid === PIT_SCORING[0];
-    const secCls = isSection ? " h2h-section-break" : "";
-
-    if (sid === "31" && vA === 0 && vB === 0) {
-      ties++;
-      rows += `<tr><td class="h2h-cat-name${secCls}">${m.n}</td><td class="h2h-tie${secCls}" style="text-align:center">${tA.stats[sid]||"0"}</td><td style="text-align:center;color:var(--text3);font-size:11px" class="${secCls}">—</td><td class="h2h-tie${secCls}" style="text-align:center">${tB.stats[sid]||"0"}</td></tr>`;
-      return;
-    }
-
-    let aWins=false, bWins=false;
-    if (m.b==="hi") { aWins=vA>vB; bWins=vB>vA; }
-    else { aWins=vA<vB; bWins=vB<vA; }
-    if (aWins) wins++; else if (bWins) losses++; else ties++;
-
-    const dA = tA.stats[sid] || "0";
-    const dB = tB.stats[sid] || "0";
-    const cA = aWins ? "h2h-win" : bWins ? "h2h-lose" : "h2h-tie";
-    const cB = bWins ? "h2h-win" : aWins ? "h2h-lose" : "h2h-tie";
-    const arrow = aWins ? "◀" : bWins ? "▶" : "=";
-    const arrowCol = aWins ? "color:var(--success)" : bWins ? "color:var(--danger)" : "color:var(--text3)";
-
-    rows += `<tr class="h2h-cat-row"><td class="h2h-cat-name${secCls}">${m.n}</td><td class="${cA}${secCls}" style="text-align:center">${dA}</td><td style="text-align:center;${arrowCol};font-size:11px" class="${secCls}">${arrow}</td><td class="${cB}${secCls}" style="text-align:center">${dB}</td></tr>`;
-  });
-
-  const hh = `<thead><tr><th style="width:80px">Cat</th><th style="min-width:120px">${tA.name}</th><th style="width:40px"></th><th style="min-width:120px">${tB.name}</th></tr></thead><tbody>${rows}</tbody>`;
-  document.getElementById("tblH2H").innerHTML = hh;
-
-  const sc = wins > losses ? `color:var(--success)` : wins < losses ? `color:var(--danger)` : `color:var(--text2)`;
-  document.getElementById("h2h-score").innerHTML = `<span style="${sc}">${wins} - ${losses} - ${ties}</span>`;
-}
-
-function simMatchup(a, b) {
+function simMatchup(a,b){
   let w=0,l=0,t=0;
-  ALL_SCORING.forEach(sid => {
-    const m=STAT_META[sid]; if(!m||!m.b)return;
-    const vA=getStatValue(a,sid), vB=getStatValue(b,sid);
+  ALL_S.forEach(sid=>{
+    const m=SM[sid];if(!m||!m.b)return;
+    const vA=getVal(a,sid),vB=getVal(b,sid);
     if(sid==="31"&&vA===0&&vB===0){t++;return;}
-    let aW=false,bW=false;
-    if(m.b==="hi"){aW=vA>vB;bW=vB>vA;}else{aW=vA<vB;bW=vB<vA;}
-    if(aW)w++;else if(bW)l++;else t++;
+    if(m.b==="hi"?vA>vB:vA<vB)w++;else if(m.b==="hi"?vB>vA:vB<vA)l++;else t++;
   });
-  return {w,l,t};
+  return{w,l,t};
 }
 
-function simAllMatchups(team, allTeams) {
+function simAll(team,allTeams){
   let tw=0,tl=0,tt=0;
-  allTeams.forEach(opp => {
-    if(opp.id===team.id)return;
-    const r=simMatchup(team,opp);
-    if(r.w>r.l)tw++;else if(r.l>r.w)tl++;else tt++;
-  });
-  return {w:tw,l:tl,t:tt};
+  allTeams.forEach(opp=>{if(opp.id===team.id)return;const r=simMatchup(team,opp);if(r.w>r.l)tw++;else if(r.l>r.w)tl++;else tt++;});
+  return{w:tw,l:tl,t:tt};
 }
 
-let powerSortCol = "season";
-let powerSortDir = 1; // 1 = best first
+// --- LEAGUE STATS ---
+function render(){
+  const period=document.getElementById("period").value;
+  const teams=WEEKS_DATA[period];if(!teams)return;
+  const n=teams.length;
+  const allR={};ALL_S.forEach(s=>allR[s]=getRanks(teams,s));
+  const medals={};teams.forEach(t=>medals[t.id]=0);
+  ALL_S.forEach(s=>{if(s==="31"&&teams.every(t=>(parseFloat(t.stats[s])||0)===0))return;const r=allR[s];teams.forEach(t=>{if(r[t.id]===1)medals[t.id]++;});});
+  const sorted=[...teams].sort((a,b)=>a.name.localeCompare(b.name));
 
-function renderPower() {
-  const weekKeys = Object.keys(WEEKS_DATA).filter(k=>k!=="season"&&WEEKS_DATA[k]).sort((a,b)=>parseInt(a)-parseInt(b));
-
-  const teamSims = {};
-  const seasonTeams = WEEKS_DATA["season"];
-  if (!seasonTeams) return;
-
-  seasonTeams.forEach(t => { teamSims[t.id] = { name:t.name, mgr:t.mgr }; });
-
-  weekKeys.forEach(wk => {
-    const teams = WEEKS_DATA[wk];
-    if (!teams) return;
-    teams.forEach(t => {
-      const sim = simAllMatchups(t, teams);
-      if (!teamSims[t.id]) teamSims[t.id] = { name:t.name, mgr:t.mgr };
-      teamSims[t.id][wk] = sim;
-    });
+  let h=`<thead><tr><th class='name'>Team</th><th>W-L-T</th><th class='sec' colspan='${BAT.length}'>Batting</th><th class='sec' colspan='${PIT.length}'>Pitching</th><th>🏅</th></tr><tr><th class='name'></th><th>PCT</th>`;
+  ALL_IDS.forEach(s=>h+=`<th>${SM[s]?.n||s}</th>`);
+  h+="<th>#1</th></tr></thead><tbody>";
+  sorted.forEach(t=>{
+    h+="<tr>";
+    h+=`<td class='name'>${t.name}<br><span class='mgr'>${t.mgr} · Div ${t.div}</span></td>`;
+    h+=`<td><span class='pct'>${t.pct}</span><br><span class='wlt'>${t.w}-${t.l}-${t.t}</span></td>`;
+    ALL_IDS.forEach(s=>{const v=t.stats[s]||"—";const sc=SM[s].scoring!==false;const rk=sc?allR[s]?.[t.id]:null;const bg=rk?colorForRank(rk,n):"transparent";h+=`<td style="background:${bg};${rk?goldTxt(rk):""}">${v}</td>`;});
+    h+=`<td class='medal'>${medals[t.id]||0}</td></tr>`;
   });
-
-  const ids = Object.keys(teamSims);
-  ids.forEach(id => {
-    let sw=0,sl=0,st=0;
-    weekKeys.forEach(wk => {
-      const s = teamSims[id][wk];
-      if(s){sw+=s.w;sl+=s.l;st+=s.t;}
-    });
-    teamSims[id].season = {w:sw,l:sl,t:st};
+  const vs=sid=>teams.map(t=>parseFloat(t.stats[sid])||0);
+  [["s-best","Best",(s,v)=>{const m=SM[s];return m.b==="hi"?Math.max(...v):Math.min(...v);}],["s-avg","Average",(s,v)=>v.reduce((a,b)=>a+b,0)/v.length],["s-worst","Worst",(s,v)=>{const m=SM[s];return m.b==="hi"?Math.min(...v):Math.max(...v);}]].forEach(([cls,label,fn])=>{
+    h+=`<tr class='summary ${cls}'><td class='name'>${label}</td><td></td>`;
+    ALL_IDS.forEach(s=>{if(SM[s].scoring===false){h+="<td></td>";return;}h+=`<td>${fmtS(s,fn(s,vs(s)))}</td>`;});
+    h+="<td></td></tr>";
   });
+  h+="</tbody>";document.getElementById("tbl").innerHTML=h;
 
-  const wltPct = (r, weeks) => {
-    if(!r) return -999;
-    const n = 11 * (weeks || 1);
-    return (r.w + r.t * 0.5) / n;
-  };
+  // Rankings
+  let h2=`<thead><tr><th class='name'>Team</th><th class='sec' colspan='${BAT_S.length}'>Batting</th><th class='sec' colspan='${PIT_S.length}'>Pitching</th></tr><tr><th class='name'></th>`;
+  ALL_S.forEach(s=>h2+=`<th>${SM[s]?.n||s}</th>`);
+  h2+="</tr></thead><tbody>";
+  sorted.forEach(t=>{h2+=`<tr><td class='name'>${t.name}<br><span class='mgr'>${t.mgr}</span></td>`;ALL_S.forEach(s=>{const rk=allR[s]?.[t.id]||"—";const bg=typeof rk==="number"?colorForRank(rk,n):"transparent";h2+=`<td style="background:${bg};${typeof rk==="number"?goldTxt(rk):""}">${rk}</td>`;});h2+="</tr>";});
+  h2+="</tbody>";document.getElementById("tblRank").innerHTML=h2;
 
-  const sorted = ids.map(id=>({id:parseInt(id),...teamSims[id]}));
-
-  sorted.sort((a,b) => {
-    const col = powerSortCol;
-    const wks = col === "season" ? weekKeys.length : 1;
-    const pA = wltPct(a[col], wks);
-    const pB = wltPct(b[col], wks);
-    return powerSortDir * (pB - pA);
-  });
-
-  const fmtWLT = (r) => {
-    if(!r) return '<span style="color:var(--text3)">—</span>';
-    return `<span style="color:var(--success);font-weight:700">${r.w}</span><span style="color:var(--text3)">-</span><span style="color:var(--danger);font-weight:600">${r.l}</span><span style="color:var(--text3)">-</span><span style="color:var(--text3)">${r.t}</span>`;
-  };
-
-  const fmtPct = (r, weeks) => {
-    if(!r) return "";
-    const n = 11 * weeks;
-    if(n===0) return "";
-    const pct = (r.w + r.t * 0.5) / n;
-    return `<div style="font-size:10px;color:var(--text3);margin-top:1px">${pct.toFixed(3).replace(/^0/,"")}</div>`;
-  };
-
-  const sortIcon = (col) => {
-    if (powerSortCol !== col) return ' <span style="opacity:0.3;font-size:8px">▼</span>';
-    return powerSortDir === 1 ? ' <span style="font-size:8px">▼</span>' : ' <span style="font-size:8px">▲</span>';
-  };
-
-  let h = `<thead><tr><th style="text-align:left;width:30px">#</th><th style="text-align:left;min-width:170px">Team</th><th style="background:var(--bg2);cursor:pointer" onclick="togglePowerSort('season')" class="sortable">Season${sortIcon("season")}</th>`;
-  weekKeys.forEach(wk => h += `<th style="border-left:1px solid var(--border);cursor:pointer" onclick="togglePowerSort('${wk}')" class="sortable">Wk ${wk}${sortIcon(wk)}</th>`);
-  h += "</tr></thead><tbody>";
-
-  sorted.forEach((t,i) => {
-    h += `<tr><td style="text-align:left;font-weight:700;color:var(--text3)">${i+1}</td>`;
-    h += `<td style="text-align:left;font-weight:600">${t.name}<br><span style="color:var(--text3);font-size:10px;font-weight:400">${t.mgr}</span></td>`;
-    h += `<td style="background:var(--bg2);font-weight:600">${fmtWLT(t.season)}${fmtPct(t.season, weekKeys.length)}</td>`;
-    weekKeys.forEach(wk => {
-      h += `<td style="border-left:1px solid var(--border)">${fmtWLT(t[wk])}</td>`;
-    });
-    h += "</tr>";
-  });
-
-  h += "</tbody>";
-  document.getElementById("tblPower").innerHTML = h;
+  // Avg ranks
+  const avgD=sorted.map(t=>{const bR=BAT_S.map(s=>allR[s]?.[t.id]||n),pR=PIT_S.map(s=>allR[s]?.[t.id]||n);return{id:t.id,name:t.name,mgr:t.mgr,bAvg:bR.reduce((a,b)=>a+b,0)/bR.length,pAvg:pR.reduce((a,b)=>a+b,0)/pR.length,tAvg:[...bR,...pR].reduce((a,b)=>a+b,0)/[...bR,...pR].length};});
+  function rkAvg(arr,key){const s=[...arr].sort((a,b)=>a[key]-b[key]);const r={};s.forEach((x,i)=>r[x.id]=i+1);return r;}
+  const bAR=rkAvg(avgD,"bAvg"),pAR=rkAvg(avgD,"pAvg"),tAR=rkAvg(avgD,"tAvg");
+  let h3="<thead><tr><th class='name'>Team</th><th>Batting</th><th>Pitching</th><th>Total</th></tr></thead><tbody>";
+  avgD.forEach(t=>{h3+=`<tr><td class='name'>${t.name}<br><span class='mgr'>${t.mgr}</span></td>`;
+    [[bAR,t.bAvg],[pAR,t.pAvg],[tAR,t.tAvg]].forEach(([rMap,val])=>{const r=rMap[t.id];h3+=`<td style="background:${colorForRank(r,n)};${goldTxt(r)}">${val.toFixed(1)}</td>`;});
+    h3+="</tr>";});
+  h3+="</tbody>";document.getElementById("tblAvg").innerHTML=h3;
 }
 
-function togglePowerSort(col) {
-  if (powerSortCol === col) {
-    powerSortDir *= -1;
-  } else {
-    powerSortCol = col;
-    powerSortDir = -1;
+// --- HEAD TO HEAD ---
+let h2hInit=false;
+function renderH2H(){
+  const period=document.getElementById("period-h2h").value;
+  const teams=WEEKS_DATA[period];if(!teams)return;
+  const selA=document.getElementById("h2h-a"),selB=document.getElementById("h2h-b");
+  if(!h2hInit){
+    const byName=[...teams].sort((a,b)=>a.name.localeCompare(b.name));
+    byName.forEach(t=>{selA.innerHTML+=`<option value="${t.id}"${t.id===2?" selected":""}>${t.name}</option>`;selB.innerHTML+=`<option value="${t.id}"${t.id===5?" selected":""}>${t.name}</option>`;});
+    h2hInit=true;
   }
-  renderPower();
+  const tA=teams.find(t=>t.id===parseInt(selA.value)),tB=teams.find(t=>t.id===parseInt(selB.value));
+  if(!tA||!tB)return;
+  let wins=0,losses=0,ties=0,rows="";
+  ALL_S.forEach(sid=>{
+    const m=SM[sid];if(!m||!m.b)return;
+    const vA=getVal(tA,sid),vB=getVal(tB,sid);
+    const secBrk=sid===PIT_S[0]?" h2h-section-break":"";
+    if(sid==="31"&&vA===0&&vB===0){ties++;rows+=`<tr><td style="font-weight:600;color:var(--text2);text-align:center;font-size:12px;text-transform:uppercase;letter-spacing:.3px" class="${secBrk}">${m.n}</td><td class="h2h-tie${secBrk}" style="text-align:center">${tA.stats[sid]||"0"}</td><td style="text-align:center;color:var(--text3);font-size:11px" class="${secBrk}">—</td><td class="h2h-tie${secBrk}" style="text-align:center">${tB.stats[sid]||"0"}</td></tr>`;return;}
+    let aW=m.b==="hi"?vA>vB:vA<vB,bW=m.b==="hi"?vB>vA:vB<vA;
+    if(aW)wins++;else if(bW)losses++;else ties++;
+    const cA=aW?"h2h-win":bW?"h2h-lose":"h2h-tie",cB=bW?"h2h-win":aW?"h2h-lose":"h2h-tie";
+    const arrow=aW?"◀":bW?"▶":"=",arrowCol=aW?"color:var(--success)":bW?"color:var(--danger)":"color:var(--text3)";
+    rows+=`<tr><td style="font-weight:600;color:var(--text2);text-align:center;font-size:12px;text-transform:uppercase;letter-spacing:.3px" class="${secBrk}">${m.n}</td><td class="${cA}${secBrk}" style="text-align:center;padding:8px 12px;font-size:13px">${tA.stats[sid]||"0"}</td><td style="text-align:center;${arrowCol};font-size:11px" class="${secBrk}">${arrow}</td><td class="${cB}${secBrk}" style="text-align:center;padding:8px 12px;font-size:13px">${tB.stats[sid]||"0"}</td></tr>`;
+  });
+  document.getElementById("tblH2H").innerHTML=`<thead><tr><th style="width:80px">Cat</th><th style="min-width:120px">${tA.name}</th><th style="width:40px"></th><th style="min-width:120px">${tB.name}</th></tr></thead><tbody>${rows}</tbody>`;
+  const sc=wins>losses?"color:var(--success)":wins<losses?"color:var(--danger)":"color:var(--text2)";
+  document.getElementById("h2h-score").innerHTML=`<span style="${sc}">${wins} - ${losses} - ${ties}</span>`;
 }
+
+// --- POWER RANKINGS ---
+let powerSortCol="season",powerSortDir=1;
+
+function renderPower(){
+  const wks=Object.keys(WEEKS_DATA).filter(k=>k!=="season"&&WEEKS_DATA[k]).sort((a,b)=>parseInt(a)-parseInt(b));
+  const seasonTeams=WEEKS_DATA["season"];if(!seasonTeams)return;
+  const sims={};
+  seasonTeams.forEach(t=>{sims[t.id]={name:t.name,mgr:t.mgr};});
+  wks.forEach(wk=>{const teams=WEEKS_DATA[wk];if(!teams)return;teams.forEach(t=>{if(!sims[t.id])sims[t.id]={name:t.name,mgr:t.mgr};sims[t.id][wk]=simAll(t,teams);});});
+  Object.keys(sims).forEach(id=>{let sw=0,sl=0,st=0;wks.forEach(wk=>{const s=sims[id][wk];if(s){sw+=s.w;sl+=s.l;st+=s.t;}});sims[id].season={w:sw,l:sl,t:st};});
+
+  const sorted=Object.keys(sims).map(id=>({id:parseInt(id),...sims[id]}));
+  sorted.sort((a,b)=>{const wc=powerSortCol==="season"?wks.length:1;const pA=a[powerSortCol]?(a[powerSortCol].w+a[powerSortCol].t*0.5)/(11*wc):-1;const pB=b[powerSortCol]?(b[powerSortCol].w+b[powerSortCol].t*0.5)/(11*wc):-1;return powerSortDir*(pB-pA);});
+
+  const sortIco=col=>{if(powerSortCol!==col)return' <span style="opacity:0.3;font-size:8px">▼</span>';return powerSortDir===1?' <span style="font-size:8px">▼</span>':' <span style="font-size:8px">▲</span>';};
+  const fmtPct=(r,w)=>{if(!r)return"";const n=11*w;if(!n)return"";return`<div style="font-size:10px;color:var(--text3);margin-top:1px">${((r.w+r.t*0.5)/n).toFixed(3).replace(/^0/,"")}</div>`;};
+
+  let h=`<thead><tr><th style="text-align:left;width:30px">#</th><th style="text-align:left;min-width:170px">Team</th><th class="sortable" style="background:var(--bg2)" onclick="togglePowerSort('season')">Season${sortIco("season")}</th>`;
+  wks.forEach(wk=>h+=`<th class="sortable" style="border-left:1px solid var(--border)" onclick="togglePowerSort('${wk}')">Wk ${wk}${sortIco(wk)}</th>`);
+  h+="</tr></thead><tbody>";
+  sorted.forEach((t,i)=>{
+    h+=`<tr><td style="text-align:left;font-weight:700;color:var(--text3)">${i+1}</td>`;
+    h+=`<td style="text-align:left;font-weight:600">${t.name}<br><span style="color:var(--text3);font-size:10px;font-weight:400">${t.mgr}</span></td>`;
+    h+=`<td style="background:var(--bg2);font-weight:600">${fmtWLT(t.season)}${fmtPct(t.season,wks.length)}</td>`;
+    wks.forEach(wk=>{h+=`<td style="border-left:1px solid var(--border)">${fmtWLT(t[wk])}</td>`;});
+    h+="</tr>";
+  });
+  h+="</tbody>";document.getElementById("tblPower").innerHTML=h;
+}
+
+function togglePowerSort(col){if(powerSortCol===col)powerSortDir*=-1;else{powerSortCol=col;powerSortDir=1;}renderPower();}
 
 render();
-matchMedia('(prefers-color-scheme:dark)').addEventListener('change', () => { render(); renderH2H(); });
+matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>{render();renderH2H();renderPower();});
 </script>
 </body>
 </html>
