@@ -6,18 +6,20 @@
 <title>Пинчеры на базе — Fantasy MLB 2026</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#fafaf9;--bg2:#f5f5f4;--bg3:#e7e5e4;--card:#fff;--text:#1c1917;--text2:#78716c;--text3:#a8a29e;--border:#e7e5e4;--border2:#d6d3d1;--accent:#7c3aed;--accent-bg:#f5f3ff;--accent2:#6d28d9;--gold:#f59e0b;--gold-bg:rgba(245,158,11,0.15);--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
-@media(prefers-color-scheme:dark){:root{--bg:#1c1917;--bg2:#292524;--bg3:#44403c;--card:#292524;--text:#fafaf9;--text2:#a8a29e;--text3:#78716c;--border:#44403c;--border2:#57534e;--accent:#a78bfa;--accent-bg:rgba(167,139,250,0.1);--accent2:#8b5cf6;--gold:#fbbf24;--gold-bg:rgba(251,191,36,0.15)}}
+:root{--bg:#fafaf9;--bg2:#f5f5f4;--bg3:#e7e5e4;--card:#fff;--text:#1c1917;--text2:#78716c;--text3:#a8a29e;--border:#e7e5e4;--border2:#d6d3d1;--accent:#7c3aed;--accent-bg:#f5f3ff;--accent2:#6d28d9;--gold:#f59e0b;--gold-bg:rgba(245,158,11,0.22);--success:#16a34a;--danger:#dc2626;--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+@media(prefers-color-scheme:dark){:root{--bg:#1c1917;--bg2:#292524;--bg3:#44403c;--card:#292524;--text:#fafaf9;--text2:#a8a29e;--text3:#78716c;--border:#44403c;--border2:#57534e;--accent:#a78bfa;--accent-bg:rgba(167,139,250,0.1);--accent2:#8b5cf6;--gold:#fbbf24;--gold-bg:rgba(251,191,36,0.3);--success:#4ade80;--danger:#f87171}}
 body{font-family:var(--font);background:var(--bg);color:var(--text);padding:20px;max-width:1440px;margin:0 auto}
 h1{font-size:22px;font-weight:700;margin-bottom:2px;letter-spacing:-0.3px}
 .sub{font-size:13px;color:var(--text2);margin-bottom:20px}
 h2{font-size:13px;font-weight:600;margin:28px 0 8px;color:var(--text3);text-transform:uppercase;letter-spacing:1px}
+.tabs{display:flex;gap:4px;margin-bottom:20px;border-bottom:2px solid var(--border)}
+.tab{padding:10px 20px;font-size:13px;font-weight:600;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;background:none;border-top:none;border-left:none;border-right:none}
+.tab.on{color:var(--accent);border-bottom-color:var(--accent)}
+.tab:hover:not(.on){color:var(--text2)}
+.page{display:none}
+.page.active{display:block}
 .controls{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
-.controls .sep{flex:1}
 .controls label{font-size:11px;color:var(--text3);font-weight:500}
-.btn{padding:6px 16px;border-radius:20px;border:1px solid var(--border);cursor:pointer;font-weight:500;font-size:12px;background:var(--card);color:var(--text2);transition:all .15s}
-.btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
-.btn:hover:not(.on){background:var(--bg2);border-color:var(--border2)}
 .wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border);background:var(--card);margin-bottom:4px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 table{border-collapse:collapse;width:100%;font-size:12px}
 thead th{padding:8px 6px;font-weight:600;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;text-align:center;background:var(--card);border-bottom:2px solid var(--border);position:sticky;top:0;z-index:2}
@@ -33,43 +35,78 @@ tr:hover td{background:var(--bg2)!important}
 .medal{font-weight:800;font-size:15px;color:var(--gold)}
 .summary td{font-size:11px;font-weight:600;background:var(--bg2)!important}
 .summary td.name{background:var(--bg2)!important}
-.s-best td{color:#15803d}
+.s-best td{color:var(--success)}
 .s-avg td{color:var(--text2)}
-.s-worst td{color:#dc2626}
-@media(prefers-color-scheme:dark){.s-best td{color:#4ade80}.s-worst td{color:#f87171}}
+.s-worst td{color:var(--danger)}
 select{padding:5px 10px;border-radius:20px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:12px;font-weight:500}
-.legend{margin-top:10px;margin-bottom:20px;font-size:11px;color:var(--text3);display:flex;gap:14px;flex-wrap:wrap}
-.legend span{display:inline-flex;align-items:center;gap:5px}
-.leg-box{width:16px;height:16px;border-radius:4px;display:inline-block;border:1px solid rgba(0,0,0,.06)}
+.legend{margin-top:6px;margin-bottom:16px;font-size:11px;color:var(--text3);display:flex;gap:12px;flex-wrap:wrap}
+.legend span{display:inline-flex;align-items:center;gap:4px}
+.leg-box{width:14px;height:14px;border-radius:3px;display:inline-block;border:1px solid rgba(0,0,0,.06)}
+.h2h-header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.h2h-score{font-weight:800;font-size:22px;letter-spacing:1px;padding:4px 16px;border-radius:8px;background:var(--bg2)}
+.h2h-cat-row td{padding:8px 12px;font-size:13px}
+.h2h-cat-name{font-weight:600;color:var(--text2);text-align:center;font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+.h2h-win{background:rgba(74,222,128,0.15);font-weight:700}
+.h2h-lose{background:rgba(248,113,113,0.1)}
+.h2h-tie{color:var(--text3)}
+.h2h-section-break{border-top:2px solid var(--accent)!important}
 </style>
 </head>
 <body>
 <h1>⚾ Пинчеры на базе</h1>
 <div class="sub">Yahoo Fantasy MLB 2026 · League 43533 · 12 teams · H2H</div>
 
-<div class="controls">
-  <label>Period</label>
-  <select id="period" onchange="render()">
-    <option value="season">Season total</option>
-    <option value="1">Week 1</option>
-  </select>
+<div class="tabs">
+  <button class="tab on" onclick="switchTab('league')">League stats</button>
+  <button class="tab" onclick="switchTab('h2h')">Head-to-head</button>
 </div>
 
-<h2>Stats</h2>
-<div class="wrap"><table id="tbl"></table></div>
+<!-- LEAGUE PAGE -->
+<div class="page active" id="page-league">
+  <div class="controls">
+    <label>Period</label>
+    <select id="period" onchange="render()">
+      <option value="season">Season total</option>
+      <option value="1">Week 1</option>
+    </select>
+  </div>
 
-<h2>Rankings</h2>
-<div class="wrap"><table id="tblRank"></table></div>
+  <h2>Stats</h2>
+  <div class="wrap"><table id="tbl"></table></div>
 
-<h2>Average rank</h2>
-<div class="wrap"><table id="tblAvg"></table></div>
+  <h2>Rankings</h2>
+  <div class="wrap"><table id="tblRank"></table></div>
 
-<div class="legend">
-  <span><span class="leg-box" style="background:var(--gold)"></span> 1st (gold)</span>
-  <span><span class="leg-box" style="background:#bbe8c3"></span> 2nd–3rd</span>
-  <span><span class="leg-box" style="background:#d8eedd"></span> Mid</span>
-  <span><span class="leg-box" style="background:#f0c8c8"></span> Low</span>
-  <span><span class="leg-box" style="background:var(--card);border-color:var(--border)"></span> Last</span>
+  <h2>Average rank</h2>
+  <div class="wrap"><table id="tblAvg"></table></div>
+
+  <div class="legend">
+    <span><span class="leg-box" style="background:var(--gold)"></span> 1st (gold)</span>
+    <span><span class="leg-box" style="background:#bbe8c3"></span> 2nd–3rd</span>
+    <span><span class="leg-box" style="background:#d8eedd"></span> Mid</span>
+    <span><span class="leg-box" style="background:#f0c8c8"></span> Low</span>
+    <span><span class="leg-box" style="background:var(--card);border-color:var(--border)"></span> Last</span>
+  </div>
+</div>
+
+<!-- H2H PAGE -->
+<div class="page" id="page-h2h">
+  <div class="controls">
+    <label>Period</label>
+    <select id="period-h2h" onchange="renderH2H()">
+      <option value="season">Season total</option>
+      <option value="1">Week 1</option>
+    </select>
+  </div>
+
+  <div class="h2h-header">
+    <select id="h2h-a" onchange="renderH2H()" style="font-size:14px;font-weight:600;padding:8px 14px"></select>
+    <span style="font-weight:700;font-size:16px;color:var(--text3)">vs</span>
+    <select id="h2h-b" onchange="renderH2H()" style="font-size:14px;font-weight:600;padding:8px 14px"></select>
+    <span id="h2h-score" class="h2h-score"></span>
+  </div>
+
+  <div class="wrap"><table id="tblH2H"></table></div>
 </div>
 
 <script>
@@ -89,17 +126,35 @@ const BAT=["60","7","8","9","10","11","12","13","16","18","21","3"];
 const PIT=["50","28","29","31","32","38","39","42","48","26","83","84"];
 const BAT_SCORING=BAT.filter(s=>STAT_META[s].scoring!==false);
 const PIT_SCORING=PIT.filter(s=>STAT_META[s].scoring!==false);
+const ALL_SCORING=[...BAT_SCORING,...PIT_SCORING];
 
-const WEEKS_DATA = {"season": [{"id": 8, "name": "Japan man #17", "mgr": "Павел", "div": 2, "rank": 1, "w": 12, "l": 7, "t": 3, "pct": ".614", "stats": {"60": "", "7": "17", "8": "25", "9": "19", "10": "2", "11": "0", "12": "4", "13": "15", "16": "3", "18": "21", "21": "33", "3": ".214", "50": "30.1", "28": "1", "29": "0", "31": "0", "32": "1", "38": "2", "39": "13", "42": "33", "48": "1", "26": "2.37", "83": "1", "84": "2"}}, {"id": 5, "name": "NBG Oldboys", "mgr": "Anton", "div": 1, "rank": 2, "w": 10, "l": 8, "t": 4, "pct": ".545", "stats": {"60": "", "7": "20", "8": "35", "9": "28", "10": "4", "11": "0", "12": "3", "13": "13", "16": "3", "18": "20", "21": "30", "3": ".299", "50": "25.2", "28": "0", "29": "2", "31": "0", "32": "4", "38": "3", "39": "16", "42": "26", "48": "0", "26": "5.26", "83": "0", "84": "0"}}, {"id": 10, "name": "Worrying Gnomes", "mgr": "Alexandr", "div": 2, "rank": 3, "w": 12, "l": 7, "t": 3, "pct": ".614", "stats": {"60": "", "7": "14", "8": "23", "9": "17", "10": "2", "11": "1", "12": "3", "13": "6", "16": "0", "18": "12", "21": "29", "3": ".190", "50": "40.2", "28": "3", "29": "0", "31": "0", "32": "5", "38": "5", "39": "10", "42": "42", "48": "2", "26": "3.98", "83": "1", "84": "1"}}, {"id": 2, "name": "Galilee Paratroopers", "mgr": "Stas", "div": 2, "rank": 4, "w": 10, "l": 6, "t": 6, "pct": ".591", "stats": {"60": "", "7": "18", "8": "38", "9": "29", "10": "2", "11": "0", "12": "7", "13": "17", "16": "2", "18": "19", "21": "34", "3": ".286", "50": "28.1", "28": "0", "29": "3", "31": "0", "32": "1", "38": "3", "39": "6", "42": "22", "48": "1", "26": "3.81", "83": "2", "84": "1"}, "you": true}, {"id": 1, "name": "Moscow Salpballs", "mgr": "salp", "div": 1, "rank": 5, "w": 11, "l": 10, "t": 1, "pct": ".523", "stats": {"60": "", "7": "19", "8": "29", "9": "16", "10": "10", "11": "0", "12": "3", "13": "16", "16": "3", "18": "15", "21": "33", "3": ".230", "50": "42.1", "28": "1", "29": "4", "31": "0", "32": "0", "38": "9", "39": "15", "42": "44", "48": "3", "26": "5.74", "83": "2", "84": "3"}}, {"id": 3, "name": "Moscow Herding Beasts", "mgr": "Nprmr", "div": 1, "rank": 6, "w": 8, "l": 8, "t": 6, "pct": ".500", "stats": {"60": "", "7": "19", "8": "38", "9": "22", "10": "8", "11": "0", "12": "8", "13": "16", "16": "3", "18": "21", "21": "39", "3": ".299", "50": "51.0", "28": "2", "29": "4", "31": "0", "32": "1", "38": "6", "39": "16", "42": "75", "48": "1", "26": "3.18", "83": "2", "84": "0"}}, {"id": 9, "name": "The Templars", "mgr": "Andrey", "div": 1, "rank": 7, "w": 8, "l": 8, "t": 6, "pct": ".500", "stats": {"60": "", "7": "16", "8": "30", "9": "17", "10": "6", "11": "1", "12": "6", "13": "27", "16": "4", "18": "23", "21": "38", "3": ".222", "50": "28.0", "28": "2", "29": "3", "31": "0", "32": "1", "38": "1", "39": "15", "42": "33", "48": "1", "26": "6.43", "83": "2", "84": "0"}}, {"id": 7, "name": "Moscow Dachshunds", "mgr": "Artur", "div": 1, "rank": 8, "w": 10, "l": 11, "t": 1, "pct": ".477", "stats": {"60": "", "7": "17", "8": "23", "9": "10", "10": "6", "11": "2", "12": "5", "13": "10", "16": "2", "18": "19", "21": "42", "3": ".190", "50": "16.0", "28": "2", "29": "1", "31": "0", "32": "1", "38": "2", "39": "7", "42": "17", "48": "0", "26": "3.38", "83": "1", "84": "2"}}, {"id": 11, "name": "St.Petersburg Salt Lovers", "mgr": "Elnar", "div": 1, "rank": 9, "w": 8, "l": 10, "t": 4, "pct": ".455", "stats": {"60": "", "7": "15", "8": "28", "9": "22", "10": "6", "11": "0", "12": "0", "13": "8", "16": "1", "18": "10", "21": "26", "3": ".275", "50": "45.0", "28": "3", "29": "1", "31": "0", "32": "3", "38": "6", "39": "12", "42": "44", "48": "0", "26": "3.60", "83": "3", "84": "0"}}, {"id": 6, "name": "Frankfurter Jungs", "mgr": "Kirill", "div": 2, "rank": 10, "w": 6, "l": 10, "t": 6, "pct": ".409", "stats": {"60": "", "7": "19", "8": "32", "9": "23", "10": "2", "11": "0", "12": "7", "13": "25", "16": "2", "18": "12", "21": "25", "3": ".262", "50": "51.2", "28": "3", "29": "4", "31": "0", "32": "2", "38": "7", "39": "27", "42": "60", "48": "0", "26": "5.40", "83": "1", "84": "1"}}, {"id": 4, "name": "Boobs Blumbers", "mgr": "Vel", "div": 2, "rank": 11, "w": 7, "l": 12, "t": 3, "pct": ".386", "stats": {"60": "", "7": "13", "8": "25", "9": "21", "10": "1", "11": "0", "12": "3", "13": "12", "16": "6", "18": "12", "21": "36", "3": ".210", "50": "58.0", "28": "4", "29": "3", "31": "0", "32": "0", "38": "4", "39": "24", "42": "62", "48": "3", "26": "2.48", "83": "5", "84": "0"}}, {"id": 12, "name": "Top-hat Bull Terriers", "mgr": "Vsevolod", "div": 2, "rank": 12, "w": 7, "l": 12, "t": 3, "pct": ".386", "stats": {"60": "", "7": "14", "8": "17", "9": "11", "10": "4", "11": "0", "12": "2", "13": "11", "16": "5", "18": "15", "21": "25", "3": ".155", "50": "52.2", "28": "2", "29": "4", "31": "0", "32": "0", "38": "13", "39": "19", "42": "55", "48": "2", "26": "5.98", "83": "2", "84": "2"}}], "1": [{"id": 8, "name": "Japan man #17", "mgr": "Павел", "div": 2, "rank": 1, "w": 12, "l": 7, "t": 3, "pct": ".614", "stats": {"60": "", "7": "17", "8": "25", "9": "19", "10": "2", "11": "0", "12": "4", "13": "15", "16": "3", "18": "21", "21": "33", "3": ".214", "50": "30.1", "28": "1", "29": "0", "31": "0", "32": "1", "38": "2", "39": "13", "42": "33", "48": "1", "26": "2.37", "83": "1", "84": "2"}}, {"id": 5, "name": "NBG Oldboys", "mgr": "Anton", "div": 1, "rank": 2, "w": 10, "l": 8, "t": 4, "pct": ".545", "stats": {"60": "", "7": "20", "8": "35", "9": "28", "10": "4", "11": "0", "12": "3", "13": "13", "16": "3", "18": "20", "21": "30", "3": ".299", "50": "25.2", "28": "0", "29": "2", "31": "0", "32": "4", "38": "3", "39": "16", "42": "26", "48": "0", "26": "5.26", "83": "0", "84": "0"}}, {"id": 10, "name": "Worrying Gnomes", "mgr": "Alexandr", "div": 2, "rank": 3, "w": 12, "l": 7, "t": 3, "pct": ".614", "stats": {"60": "", "7": "14", "8": "23", "9": "17", "10": "2", "11": "1", "12": "3", "13": "6", "16": "0", "18": "12", "21": "29", "3": ".190", "50": "40.2", "28": "3", "29": "0", "31": "0", "32": "5", "38": "5", "39": "10", "42": "42", "48": "2", "26": "3.98", "83": "1", "84": "1"}}, {"id": 2, "name": "Galilee Paratroopers", "mgr": "Stas", "div": 2, "rank": 4, "w": 10, "l": 6, "t": 6, "pct": ".591", "stats": {"60": "", "7": "18", "8": "38", "9": "29", "10": "2", "11": "0", "12": "7", "13": "17", "16": "2", "18": "19", "21": "34", "3": ".286", "50": "28.1", "28": "0", "29": "3", "31": "0", "32": "1", "38": "3", "39": "6", "42": "22", "48": "1", "26": "3.81", "83": "2", "84": "1"}, "you": true}, {"id": 1, "name": "Moscow Salpballs", "mgr": "salp", "div": 1, "rank": 5, "w": 11, "l": 10, "t": 1, "pct": ".523", "stats": {"60": "", "7": "19", "8": "29", "9": "16", "10": "10", "11": "0", "12": "3", "13": "16", "16": "3", "18": "15", "21": "33", "3": ".230", "50": "42.1", "28": "1", "29": "4", "31": "0", "32": "0", "38": "9", "39": "15", "42": "44", "48": "3", "26": "5.74", "83": "2", "84": "3"}}, {"id": 3, "name": "Moscow Herding Beasts", "mgr": "Nprmr", "div": 1, "rank": 6, "w": 8, "l": 8, "t": 6, "pct": ".500", "stats": {"60": "", "7": "19", "8": "38", "9": "22", "10": "8", "11": "0", "12": "8", "13": "16", "16": "3", "18": "21", "21": "39", "3": ".299", "50": "51.0", "28": "2", "29": "4", "31": "0", "32": "1", "38": "6", "39": "16", "42": "75", "48": "1", "26": "3.18", "83": "2", "84": "0"}}, {"id": 9, "name": "The Templars", "mgr": "Andrey", "div": 1, "rank": 7, "w": 8, "l": 8, "t": 6, "pct": ".500", "stats": {"60": "", "7": "16", "8": "30", "9": "17", "10": "6", "11": "1", "12": "6", "13": "27", "16": "4", "18": "23", "21": "38", "3": ".222", "50": "28.0", "28": "2", "29": "3", "31": "0", "32": "1", "38": "1", "39": "15", "42": "33", "48": "1", "26": "6.43", "83": "2", "84": "0"}}, {"id": 7, "name": "Moscow Dachshunds", "mgr": "Artur", "div": 1, "rank": 8, "w": 10, "l": 11, "t": 1, "pct": ".477", "stats": {"60": "", "7": "17", "8": "23", "9": "10", "10": "6", "11": "2", "12": "5", "13": "10", "16": "2", "18": "19", "21": "42", "3": ".190", "50": "16.0", "28": "2", "29": "1", "31": "0", "32": "1", "38": "2", "39": "7", "42": "17", "48": "0", "26": "3.38", "83": "1", "84": "2"}}, {"id": 11, "name": "St.Petersburg Salt Lovers", "mgr": "Elnar", "div": 1, "rank": 9, "w": 8, "l": 10, "t": 4, "pct": ".455", "stats": {"60": "", "7": "15", "8": "28", "9": "22", "10": "6", "11": "0", "12": "0", "13": "8", "16": "1", "18": "10", "21": "26", "3": ".275", "50": "45.0", "28": "3", "29": "1", "31": "0", "32": "3", "38": "6", "39": "12", "42": "44", "48": "0", "26": "3.60", "83": "3", "84": "0"}}, {"id": 6, "name": "Frankfurter Jungs", "mgr": "Kirill", "div": 2, "rank": 10, "w": 6, "l": 10, "t": 6, "pct": ".409", "stats": {"60": "", "7": "19", "8": "32", "9": "23", "10": "2", "11": "0", "12": "7", "13": "25", "16": "2", "18": "12", "21": "25", "3": ".262", "50": "51.2", "28": "3", "29": "4", "31": "0", "32": "2", "38": "7", "39": "27", "42": "60", "48": "0", "26": "5.40", "83": "1", "84": "1"}}, {"id": 4, "name": "Boobs Blumbers", "mgr": "Vel", "div": 2, "rank": 11, "w": 7, "l": 12, "t": 3, "pct": ".386", "stats": {"60": "", "7": "13", "8": "25", "9": "21", "10": "1", "11": "0", "12": "3", "13": "12", "16": "6", "18": "12", "21": "36", "3": ".210", "50": "58.0", "28": "4", "29": "3", "31": "0", "32": "0", "38": "4", "39": "24", "42": "62", "48": "3", "26": "2.48", "83": "5", "84": "0"}}, {"id": 12, "name": "Top-hat Bull Terriers", "mgr": "Vsevolod", "div": 2, "rank": 12, "w": 7, "l": 12, "t": 3, "pct": ".386", "stats": {"60": "", "7": "14", "8": "17", "9": "11", "10": "4", "11": "0", "12": "2", "13": "11", "16": "5", "18": "15", "21": "25", "3": ".155", "50": "52.2", "28": "2", "29": "4", "31": "0", "32": "0", "38": "13", "39": "19", "42": "55", "48": "2", "26": "5.98", "83": "2", "84": "2"}}]};
+const WEEKS_DATA = {
+  "season": [
+    {id:1,name:"Moscow Salpballs",mgr:"salp",div:1,rank:5,w:11,l:10,t:1,pct:".523",stats:{"60":"29/126","7":"19","8":"29","9":"16","10":"10","11":"0","12":"3","13":"16","3":".230","16":"3","18":"15","21":"33","50":"42.1","28":"1","29":"4","31":"0","32":"0","38":"9","39":"15","42":"44","48":"3","26":"5.74","83":"2","84":"3"}},
+    {id:2,name:"Galilee Paratroopers",mgr:"Stas",div:2,rank:4,w:10,l:6,t:6,pct:".591",you:true,stats:{"60":"38/133","7":"18","8":"38","9":"29","10":"2","11":"0","12":"7","13":"17","3":".286","16":"2","18":"19","21":"34","50":"28.1","28":"0","29":"3","31":"0","32":"1","38":"3","39":"6","42":"22","48":"1","26":"3.81","83":"2","84":"1"}},
+    {id:3,name:"Moscow Herding Beasts",mgr:"Nprmr",div:1,rank:6,w:8,l:8,t:6,pct:".500",stats:{"60":"38/127","7":"19","8":"38","9":"22","10":"8","11":"0","12":"8","13":"16","3":".299","16":"3","18":"21","21":"39","50":"51.0","28":"2","29":"4","31":"0","32":"1","38":"6","39":"16","42":"75","48":"1","26":"3.18","83":"2","84":"0"}},
+    {id:4,name:"Boobs Blumbers",mgr:"Vel",div:2,rank:11,w:7,l:12,t:3,pct:".386",stats:{"60":"25/119","7":"13","8":"25","9":"21","10":"1","11":"0","12":"3","13":"12","3":".210","16":"6","18":"12","21":"36","50":"58.0","28":"4","29":"3","31":"0","32":"0","38":"4","39":"24","42":"62","48":"3","26":"2.48","83":"5","84":"0"}},
+    {id:5,name:"NBG Oldboys",mgr:"Anton",div:1,rank:2,w:10,l:8,t:4,pct:".545",stats:{"60":"35/117","7":"20","8":"35","9":"28","10":"4","11":"0","12":"3","13":"13","3":".299","16":"3","18":"20","21":"30","50":"25.2","28":"0","29":"2","31":"0","32":"4","38":"3","39":"16","42":"26","48":"0","26":"5.26","83":"0","84":"0"}},
+    {id:6,name:"Frankfurter Jungs",mgr:"Kirill",div:2,rank:10,w:6,l:10,t:6,pct:".409",stats:{"60":"32/122","7":"19","8":"32","9":"23","10":"2","11":"0","12":"7","13":"25","3":".262","16":"2","18":"12","21":"25","50":"51.2","28":"3","29":"4","31":"0","32":"2","38":"7","39":"27","42":"60","48":"0","26":"5.40","83":"1","84":"1"}},
+    {id:7,name:"Moscow Dachshunds",mgr:"Artur",div:1,rank:8,w:10,l:11,t:1,pct:".477",stats:{"60":"23/121","7":"17","8":"23","9":"10","10":"6","11":"2","12":"5","13":"10","3":".190","16":"2","18":"19","21":"42","50":"16.0","28":"2","29":"1","31":"0","32":"1","38":"2","39":"7","42":"17","48":"0","26":"3.38","83":"1","84":"2"}},
+    {id:8,name:"Japan man #17",mgr:"Павел",div:2,rank:1,w:12,l:7,t:3,pct:".614",stats:{"60":"25/117","7":"17","8":"25","9":"19","10":"2","11":"0","12":"4","13":"15","3":".214","16":"3","18":"21","21":"33","50":"30.1","28":"1","29":"0","31":"0","32":"1","38":"2","39":"13","42":"33","48":"1","26":"2.37","83":"1","84":"2"}},
+    {id:9,name:"The Templars",mgr:"Andrey",div:1,rank:7,w:8,l:8,t:6,pct:".500",stats:{"60":"30/135","7":"16","8":"30","9":"17","10":"6","11":"1","12":"6","13":"27","3":".222","16":"4","18":"23","21":"38","50":"28.0","28":"2","29":"3","31":"0","32":"1","38":"1","39":"15","42":"33","48":"1","26":"6.43","83":"2","84":"0"}},
+    {id:10,name:"Worrying Gnomes",mgr:"Alexandr",div:2,rank:3,w:12,l:7,t:3,pct:".614",stats:{"60":"23/121","7":"14","8":"23","9":"17","10":"2","11":"1","12":"3","13":"6","3":".190","16":"0","18":"12","21":"29","50":"40.2","28":"3","29":"0","31":"0","32":"5","38":"5","39":"10","42":"42","48":"2","26":"3.98","83":"1","84":"1"}},
+    {id:11,name:"St.Petersburg Salt Lovers",mgr:"Elnar",div:1,rank:9,w:8,l:10,t:4,pct:".455",stats:{"60":"28/102","7":"15","8":"28","9":"22","10":"6","11":"0","12":"0","13":"8","3":".275","16":"1","18":"10","21":"26","50":"45.0","28":"3","29":"1","31":"0","32":"3","38":"6","39":"12","42":"44","48":"0","26":"3.60","83":"3","84":"0"}},
+    {id:12,name:"Top-hat Bull Terriers",mgr:"Vsevolod",div:2,rank:12,w:7,l:12,t:3,pct:".386",stats:{"60":"17/110","7":"14","8":"17","9":"11","10":"4","11":"0","12":"2","13":"11","3":".155","16":"5","18":"15","21":"25","50":"52.2","28":"2","29":"4","31":"0","32":"0","38":"13","39":"19","42":"55","48":"2","26":"5.98","83":"2","84":"2"}}
+  ],
+  "1": null
+};
 WEEKS_DATA["1"] = WEEKS_DATA["season"];
 
-let curView = "all";
 const dark = () => matchMedia('(prefers-color-scheme:dark)').matches;
 
-function setView(v) {
-  curView = v;
-  document.querySelectorAll('.btn[data-view]').forEach(b => b.classList.toggle('on', b.dataset.view === v));
-  render();
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelector(`.tab[onclick*="${tab}"]`).classList.add('on');
+  document.getElementById('page-' + tab).classList.add('active');
+  if (tab === 'h2h') renderH2H();
 }
 
 function getStatValue(t, sid) {
@@ -120,19 +175,15 @@ function getRanks(teams, sid) {
   if (!m || !m.b) return {};
   const vals = teams.map(t => ({id:t.id, v:getStatValue(t, sid)}));
   vals.sort((a,b) => m.b==="hi" ? b.v-a.v : a.v-b.v);
-  // SHO exception: if all zeros, everyone gets rank 6
   if (sid === "31" && vals.every(x => x.v === 0)) {
-    const r = {};
-    vals.forEach(x => r[x.id] = 6);
-    return r;
+    const r = {}; vals.forEach(x => r[x.id] = 6); return r;
   }
-  // Group by value, assign tied rank = first position in group (1-based)
   const r = {};
   let i = 0;
   while (i < vals.length) {
     let j = i;
     while (j < vals.length && vals[j].v === vals[i].v) j++;
-    const tiedRank = i + 1; // first position in group
+    const tiedRank = i + 1;
     for (let k = i; k < j; k++) r[vals[k].id] = tiedRank;
     i = j;
   }
@@ -172,12 +223,8 @@ function render() {
   const teams = WEEKS_DATA[period];
   if (!teams) return;
 
-  const batIds = curView==="pit" ? [] : BAT;
-  const pitIds = curView==="bat" ? [] : PIT;
-  const ids = [...batIds,...pitIds];
-  const batScoring = curView==="pit" ? [] : BAT_SCORING;
-  const pitScoring = curView==="bat" ? [] : PIT_SCORING;
-  const scoringIds = [...batScoring,...pitScoring];
+  const ids = [...BAT,...PIT];
+  const scoringIds = ALL_SCORING;
   const n = teams.length;
 
   const allR = {};
@@ -186,21 +233,14 @@ function render() {
   const medals = {};
   teams.forEach(t => medals[t.id]=0);
   scoringIds.forEach(s => {
-    // SHO exception: no medals if all zeros
-    if (s === "31") {
-      const allZero = teams.every(t => (parseFloat(t.stats[s])||0) === 0);
-      if (allZero) return;
-    }
+    if (s === "31") { if (teams.every(t => (parseFloat(t.stats[s])||0) === 0)) return; }
     const r=allR[s]; teams.forEach(t => { if(r[t.id]===1) medals[t.id]++; });
   });
 
   const sorted = [...teams].sort((a,b)=>a.name.localeCompare(b.name));
 
   // TABLE 1: STATS
-  let h = "<thead><tr><th class='name'>Team</th><th>W-L-T</th>";
-  if (batIds.length) h += `<th class='sec' colspan='${batIds.length}'>Batting</th>`;
-  if (pitIds.length) h += `<th class='sec' colspan='${pitIds.length}'>Pitching</th>`;
-  h += "<th>🏅</th></tr><tr><th class='name'></th><th>PCT</th>";
+  let h = `<thead><tr><th class='name'>Team</th><th>W-L-T</th><th class='sec' colspan='${BAT.length}'>Batting</th><th class='sec' colspan='${PIT.length}'>Pitching</th><th>🏅</th></tr><tr><th class='name'></th><th>PCT</th>`;
   ids.forEach(s => h += `<th>${STAT_META[s]?.n||s}</th>`);
   h += "<th>#1</th></tr></thead><tbody>";
 
@@ -221,39 +261,23 @@ function render() {
 
   const vals = (sid) => teams.map(t => parseFloat(t.stats[sid])||0);
   h += "<tr class='summary s-best'><td class='name'>Best</td><td></td>";
-  ids.forEach(s => {
-    const m=STAT_META[s]; if(m.scoring===false){h+="<td></td>";return;}
-    const vs=vals(s); h+= `<td>${fmtS(s, m.b==="hi"?Math.max(...vs):Math.min(...vs))}</td>`;
-  });
+  ids.forEach(s => { const m=STAT_META[s]; if(m.scoring===false){h+="<td></td>";return;} const vs=vals(s); h+=`<td>${fmtS(s, m.b==="hi"?Math.max(...vs):Math.min(...vs))}</td>`; });
   h += "<td></td></tr>";
-
   h += "<tr class='summary s-avg'><td class='name'>Average</td><td></td>";
-  ids.forEach(s => {
-    const m=STAT_META[s]; if(m.scoring===false){h+="<td></td>";return;}
-    const vs=vals(s); h+=`<td>${fmtS(s,vs.reduce((a,b)=>a+b,0)/vs.length)}</td>`;
-  });
+  ids.forEach(s => { const m=STAT_META[s]; if(m.scoring===false){h+="<td></td>";return;} const vs=vals(s); h+=`<td>${fmtS(s,vs.reduce((a,b)=>a+b,0)/vs.length)}</td>`; });
   h += "<td></td></tr>";
-
   h += "<tr class='summary s-worst'><td class='name'>Worst</td><td></td>";
-  ids.forEach(s => {
-    const m=STAT_META[s]; if(m.scoring===false){h+="<td></td>";return;}
-    const vs=vals(s); h+=`<td>${fmtS(s, m.b==="hi"?Math.min(...vs):Math.max(...vs))}</td>`;
-  });
+  ids.forEach(s => { const m=STAT_META[s]; if(m.scoring===false){h+="<td></td>";return;} const vs=vals(s); h+=`<td>${fmtS(s, m.b==="hi"?Math.min(...vs):Math.max(...vs))}</td>`; });
   h += "<td></td></tr></tbody>";
   document.getElementById("tbl").innerHTML = h;
 
   // TABLE 2: RANKINGS
-  const rIds = scoringIds;
-  let h2 = "<thead><tr><th class='name'>Team</th>";
-  if (batScoring.length) h2 += `<th class='sec' colspan='${batScoring.length}'>Batting</th>`;
-  if (pitScoring.length) h2 += `<th class='sec' colspan='${pitScoring.length}'>Pitching</th>`;
-  h2 += "</tr><tr><th class='name'></th>";
-  rIds.forEach(s => h2 += `<th>${STAT_META[s]?.n||s}</th>`);
+  let h2 = `<thead><tr><th class='name'>Team</th><th class='sec' colspan='${BAT_SCORING.length}'>Batting</th><th class='sec' colspan='${PIT_SCORING.length}'>Pitching</th></tr><tr><th class='name'></th>`;
+  scoringIds.forEach(s => h2 += `<th>${STAT_META[s]?.n||s}</th>`);
   h2 += "</tr></thead><tbody>";
-
   sorted.forEach(t => {
     h2 += `<tr><td class='name'>${t.name}<br><span class='mgr'>${t.mgr}</span></td>`;
-    rIds.forEach(s => {
+    scoringIds.forEach(s => {
       const rank = allR[s]?.[t.id] || "—";
       const bg = typeof rank==="number" ? colorForRank(rank,n) : "transparent";
       const gt = typeof rank==="number" ? goldText(rank) : "";
@@ -266,45 +290,89 @@ function render() {
 
   // TABLE 3: AVERAGE RANKS
   const avgData = sorted.map(t => {
-    const bR = batScoring.map(s => allR[s]?.[t.id]||n);
-    const pR = pitScoring.map(s => allR[s]?.[t.id]||n);
-    const aR = [...bR,...pR];
+    const bR = BAT_SCORING.map(s => allR[s]?.[t.id]||n);
+    const pR = PIT_SCORING.map(s => allR[s]?.[t.id]||n);
     return { id:t.id, name:t.name, mgr:t.mgr,
-      bAvg: bR.length ? bR.reduce((a,b)=>a+b,0)/bR.length : 0,
-      pAvg: pR.length ? pR.reduce((a,b)=>a+b,0)/pR.length : 0,
-      tAvg: aR.length ? aR.reduce((a,b)=>a+b,0)/aR.length : 0 };
+      bAvg: bR.reduce((a,b)=>a+b,0)/bR.length,
+      pAvg: pR.reduce((a,b)=>a+b,0)/pR.length,
+      tAvg: [...bR,...pR].reduce((a,b)=>a+b,0)/[...bR,...pR].length };
   });
+  function rankAvgs(arr, key) { const s=[...arr].sort((a,b)=>a[key]-b[key]); const r={}; s.forEach((x,i)=>r[x.id]=i+1); return r; }
+  const bAR=rankAvgs(avgData,"bAvg"), pAR=rankAvgs(avgData,"pAvg"), tAR=rankAvgs(avgData,"tAvg");
 
-  function rankAvgs(arr, key) {
-    const s=[...arr].sort((a,b)=>a[key]-b[key]);
-    const r={}; s.forEach((x,i)=>r[x.id]=i+1); return r;
-  }
-  const bAR = batScoring.length ? rankAvgs(avgData,"bAvg") : {};
-  const pAR = pitScoring.length ? rankAvgs(avgData,"pAvg") : {};
-  const tAR = rankAvgs(avgData,"tAvg");
-
-  let h3 = "<thead><tr><th class='name'>Team</th>";
-  if (batScoring.length) h3 += "<th>Batting</th>";
-  if (pitScoring.length) h3 += "<th>Pitching</th>";
-  h3 += "<th>Total</th></tr></thead><tbody>";
-
+  let h3 = "<thead><tr><th class='name'>Team</th><th>Batting</th><th>Pitching</th><th>Total</th></tr></thead><tbody>";
   avgData.forEach(t => {
     h3 += `<tr><td class='name'>${t.name}<br><span class='mgr'>${t.mgr}</span></td>`;
-    if (batScoring.length) {
-      const r=bAR[t.id]; h3+=`<td style="background:${colorForRank(r,n)};${goldText(r)}">${t.bAvg.toFixed(1)}</td>`;
-    }
-    if (pitScoring.length) {
-      const r=pAR[t.id]; h3+=`<td style="background:${colorForRank(r,n)};${goldText(r)}">${t.pAvg.toFixed(1)}</td>`;
-    }
-    const r=tAR[t.id]; h3+=`<td style="background:${colorForRank(r,n)};${goldText(r)}">${t.tAvg.toFixed(1)}</td>`;
+    const rb=bAR[t.id]; h3+=`<td style="background:${colorForRank(rb,n)};${goldText(rb)}">${t.bAvg.toFixed(1)}</td>`;
+    const rp=pAR[t.id]; h3+=`<td style="background:${colorForRank(rp,n)};${goldText(rp)}">${t.pAvg.toFixed(1)}</td>`;
+    const rt=tAR[t.id]; h3+=`<td style="background:${colorForRank(rt,n)};${goldText(rt)}">${t.tAvg.toFixed(1)}</td>`;
     h3 += "</tr>";
   });
   h3 += "</tbody>";
   document.getElementById("tblAvg").innerHTML = h3;
 }
 
+function renderH2H() {
+  const period = document.getElementById("period-h2h").value;
+  const teams = WEEKS_DATA[period];
+  if (!teams) return;
+
+  const selA = document.getElementById("h2h-a");
+  const selB = document.getElementById("h2h-b");
+  if (!selA.options.length) {
+    const byName = [...teams].sort((a,b)=>a.name.localeCompare(b.name));
+    byName.forEach(t => {
+      selA.innerHTML += `<option value="${t.id}"${t.id===2?" selected":""}>${t.name}</option>`;
+      selB.innerHTML += `<option value="${t.id}"${t.id===5?" selected":""}>${t.name}</option>`;
+    });
+  }
+
+  const tA = teams.find(t => t.id === parseInt(selA.value));
+  const tB = teams.find(t => t.id === parseInt(selB.value));
+  if (!tA || !tB) return;
+
+  let wins=0, losses=0, ties=0;
+  let rows = "";
+
+  ALL_SCORING.forEach((sid, idx) => {
+    const m = STAT_META[sid];
+    if (!m || !m.b) return;
+
+    const vA = getStatValue(tA, sid);
+    const vB = getStatValue(tB, sid);
+    const isSection = sid === PIT_SCORING[0];
+    const secCls = isSection ? " h2h-section-break" : "";
+
+    if (sid === "31" && vA === 0 && vB === 0) {
+      ties++;
+      rows += `<tr><td class="h2h-cat-name${secCls}">${m.n}</td><td class="h2h-tie${secCls}" style="text-align:center">${tA.stats[sid]||"0"}</td><td style="text-align:center;color:var(--text3);font-size:11px" class="${secCls}">—</td><td class="h2h-tie${secCls}" style="text-align:center">${tB.stats[sid]||"0"}</td></tr>`;
+      return;
+    }
+
+    let aWins=false, bWins=false;
+    if (m.b==="hi") { aWins=vA>vB; bWins=vB>vA; }
+    else { aWins=vA<vB; bWins=vB<vA; }
+    if (aWins) wins++; else if (bWins) losses++; else ties++;
+
+    const dA = tA.stats[sid] || "0";
+    const dB = tB.stats[sid] || "0";
+    const cA = aWins ? "h2h-win" : bWins ? "h2h-lose" : "h2h-tie";
+    const cB = bWins ? "h2h-win" : aWins ? "h2h-lose" : "h2h-tie";
+    const arrow = aWins ? "◀" : bWins ? "▶" : "=";
+    const arrowCol = aWins ? "color:var(--success)" : bWins ? "color:var(--danger)" : "color:var(--text3)";
+
+    rows += `<tr class="h2h-cat-row"><td class="h2h-cat-name${secCls}">${m.n}</td><td class="${cA}${secCls}" style="text-align:center">${dA}</td><td style="text-align:center;${arrowCol};font-size:11px" class="${secCls}">${arrow}</td><td class="${cB}${secCls}" style="text-align:center">${dB}</td></tr>`;
+  });
+
+  const hh = `<thead><tr><th style="width:80px">Cat</th><th style="min-width:120px">${tA.name}</th><th style="width:40px"></th><th style="min-width:120px">${tB.name}</th></tr></thead><tbody>${rows}</tbody>`;
+  document.getElementById("tblH2H").innerHTML = hh;
+
+  const sc = wins > losses ? `color:var(--success)` : wins < losses ? `color:var(--danger)` : `color:var(--text2)`;
+  document.getElementById("h2h-score").innerHTML = `<span style="${sc}">${wins} - ${losses} - ${ties}</span>`;
+}
+
 render();
-matchMedia('(prefers-color-scheme:dark)').addEventListener('change', render);
+matchMedia('(prefers-color-scheme:dark)').addEventListener('change', () => { render(); renderH2H(); });
 </script>
 </body>
 </html>
