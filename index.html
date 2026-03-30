@@ -59,6 +59,7 @@ select{padding:5px 10px;border-radius:20px;border:1px solid var(--border);backgr
 <div class="tabs">
   <button class="tab on" onclick="switchTab('league')">League stats</button>
   <button class="tab" onclick="switchTab('h2h')">Head-to-head</button>
+  <button class="tab" onclick="switchTab('power')">Power rankings</button>
 </div>
 
 <!-- LEAGUE PAGE -->
@@ -109,6 +110,12 @@ select{padding:5px 10px;border-radius:20px;border:1px solid var(--border);backgr
   <div class="wrap"><table id="tblH2H"></table></div>
 </div>
 
+<!-- POWER RANKINGS PAGE -->
+<div class="page" id="page-power">
+  <div class="wrap"><table id="tblPower"></table></div>
+  <div style="margin-top:8px;font-size:11px;color:var(--text3)">Simulated: each team's H2H category record vs all 11 opponents per week. W = would beat, L = would lose, T = would tie. Season = sum of all weeks. Sorted by win%.</div>
+</div>
+
 <script>
 const STAT_META={
   "60":{n:"H/AB",c:"bat",scoring:false},
@@ -155,6 +162,7 @@ function switchTab(tab) {
   document.querySelector(`.tab[onclick*="${tab}"]`).classList.add('on');
   document.getElementById('page-' + tab).classList.add('active');
   if (tab === 'h2h') renderH2H();
+  if (tab === 'power') renderPower();
 }
 
 function getStatValue(t, sid) {
@@ -369,6 +377,123 @@ function renderH2H() {
 
   const sc = wins > losses ? `color:var(--success)` : wins < losses ? `color:var(--danger)` : `color:var(--text2)`;
   document.getElementById("h2h-score").innerHTML = `<span style="${sc}">${wins} - ${losses} - ${ties}</span>`;
+}
+
+function simMatchup(a, b) {
+  let w=0,l=0,t=0;
+  ALL_SCORING.forEach(sid => {
+    const m=STAT_META[sid]; if(!m||!m.b)return;
+    const vA=getStatValue(a,sid), vB=getStatValue(b,sid);
+    if(sid==="31"&&vA===0&&vB===0){t++;return;}
+    let aW=false,bW=false;
+    if(m.b==="hi"){aW=vA>vB;bW=vB>vA;}else{aW=vA<vB;bW=vB<vA;}
+    if(aW)w++;else if(bW)l++;else t++;
+  });
+  return {w,l,t};
+}
+
+function simAllMatchups(team, allTeams) {
+  let tw=0,tl=0,tt=0;
+  allTeams.forEach(opp => {
+    if(opp.id===team.id)return;
+    const r=simMatchup(team,opp);
+    if(r.w>r.l)tw++;else if(r.l>r.w)tl++;else tt++;
+  });
+  return {w:tw,l:tl,t:tt};
+}
+
+let powerSortCol = "season";
+let powerSortDir = -1; // -1 = best first
+
+function renderPower() {
+  const weekKeys = Object.keys(WEEKS_DATA).filter(k=>k!=="season"&&WEEKS_DATA[k]).sort((a,b)=>parseInt(a)-parseInt(b));
+
+  const teamSims = {};
+  const seasonTeams = WEEKS_DATA["season"];
+  if (!seasonTeams) return;
+
+  seasonTeams.forEach(t => { teamSims[t.id] = { name:t.name, mgr:t.mgr }; });
+
+  weekKeys.forEach(wk => {
+    const teams = WEEKS_DATA[wk];
+    if (!teams) return;
+    teams.forEach(t => {
+      const sim = simAllMatchups(t, teams);
+      if (!teamSims[t.id]) teamSims[t.id] = { name:t.name, mgr:t.mgr };
+      teamSims[t.id][wk] = sim;
+    });
+  });
+
+  const ids = Object.keys(teamSims);
+  ids.forEach(id => {
+    let sw=0,sl=0,st=0;
+    weekKeys.forEach(wk => {
+      const s = teamSims[id][wk];
+      if(s){sw+=s.w;sl+=s.l;st+=s.t;}
+    });
+    teamSims[id].season = {w:sw,l:sl,t:st};
+  });
+
+  const wltPct = (r, weeks) => {
+    if(!r) return -999;
+    const n = 11 * (weeks || 1);
+    return (r.w + r.t * 0.5) / n;
+  };
+
+  const sorted = ids.map(id=>({id:parseInt(id),...teamSims[id]}));
+
+  sorted.sort((a,b) => {
+    const col = powerSortCol;
+    const wks = col === "season" ? weekKeys.length : 1;
+    const pA = wltPct(a[col], wks);
+    const pB = wltPct(b[col], wks);
+    return powerSortDir * (pB - pA);
+  });
+
+  const fmtWLT = (r) => {
+    if(!r) return '<span style="color:var(--text3)">—</span>';
+    return `<span style="color:var(--success);font-weight:700">${r.w}</span><span style="color:var(--text3)">-</span><span style="color:var(--danger);font-weight:600">${r.l}</span><span style="color:var(--text3)">-</span><span style="color:var(--text3)">${r.t}</span>`;
+  };
+
+  const fmtPct = (r, weeks) => {
+    if(!r) return "";
+    const n = 11 * weeks;
+    if(n===0) return "";
+    const pct = (r.w + r.t * 0.5) / n;
+    return `<div style="font-size:10px;color:var(--text3);margin-top:1px">${pct.toFixed(3).replace(/^0/,"")}</div>`;
+  };
+
+  const sortIcon = (col) => {
+    if (powerSortCol !== col) return ' <span style="opacity:0.3;font-size:8px">▼</span>';
+    return powerSortDir === -1 ? ' <span style="font-size:8px">▼</span>' : ' <span style="font-size:8px">▲</span>';
+  };
+
+  let h = `<thead><tr><th style="text-align:left;width:30px">#</th><th style="text-align:left;min-width:170px">Team</th><th style="background:var(--bg2);cursor:pointer" onclick="togglePowerSort('season')" class="sortable">Season${sortIcon("season")}</th>`;
+  weekKeys.forEach(wk => h += `<th style="border-left:1px solid var(--border);cursor:pointer" onclick="togglePowerSort('${wk}')" class="sortable">Wk ${wk}${sortIcon(wk)}</th>`);
+  h += "</tr></thead><tbody>";
+
+  sorted.forEach((t,i) => {
+    h += `<tr><td style="text-align:left;font-weight:700;color:var(--text3)">${i+1}</td>`;
+    h += `<td style="text-align:left;font-weight:600">${t.name}<br><span style="color:var(--text3);font-size:10px;font-weight:400">${t.mgr}</span></td>`;
+    h += `<td style="background:var(--bg2);font-weight:600">${fmtWLT(t.season)}${fmtPct(t.season, weekKeys.length)}</td>`;
+    weekKeys.forEach(wk => {
+      h += `<td style="border-left:1px solid var(--border)">${fmtWLT(t[wk])}</td>`;
+    });
+    h += "</tr>";
+  });
+
+  h += "</tbody>";
+  document.getElementById("tblPower").innerHTML = h;
+}
+
+function togglePowerSort(col) {
+  if (powerSortCol === col) {
+    powerSortDir *= -1;
+  } else {
+    powerSortCol = col;
+    powerSortDir = -1;
+  }
+  renderPower();
 }
 
 render();
