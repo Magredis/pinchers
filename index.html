@@ -122,13 +122,40 @@ function setView(v) {
   render();
 }
 
+function getStatValue(t, sid) {
+  if (sid === "3") {
+    const hab = t.stats["60"];
+    if (hab && hab.includes("/")) {
+      const parts = hab.split("/");
+      const h = parseFloat(parts[0]);
+      const ab = parseFloat(parts[1]);
+      if (ab > 0) return h / ab;
+    }
+  }
+  return parseFloat(t.stats[sid]) || 0;
+}
+
 function getRanks(teams, sid) {
   const m = STAT_META[sid];
   if (!m || !m.b) return {};
-  const vals = teams.map(t => ({id:t.id, v:parseFloat(t.stats[sid])||0}));
+  const vals = teams.map(t => ({id:t.id, v:getStatValue(t, sid)}));
   vals.sort((a,b) => m.b==="hi" ? b.v-a.v : a.v-b.v);
+  // SHO exception: if all zeros, everyone gets rank 6
+  if (sid === "31" && vals.every(x => x.v === 0)) {
+    const r = {};
+    vals.forEach(x => r[x.id] = 6);
+    return r;
+  }
+  // Group by value, assign tied rank = first position in group (1-based)
   const r = {};
-  vals.forEach((x,i) => r[x.id] = i+1);
+  let i = 0;
+  while (i < vals.length) {
+    let j = i;
+    while (j < vals.length && vals[j].v === vals[i].v) j++;
+    const tiedRank = i + 1; // first position in group
+    for (let k = i; k < j; k++) r[vals[k].id] = tiedRank;
+    i = j;
+  }
   return r;
 }
 
@@ -178,7 +205,14 @@ function render() {
 
   const medals = {};
   teams.forEach(t => medals[t.id]=0);
-  scoringIds.forEach(s => { const r=allR[s]; teams.forEach(t => { if(r[t.id]===1) medals[t.id]++; }); });
+  scoringIds.forEach(s => {
+    // SHO exception: no medals if all zeros
+    if (s === "31") {
+      const allZero = teams.every(t => (parseFloat(t.stats[s])||0) === 0);
+      if (allZero) return;
+    }
+    const r=allR[s]; teams.forEach(t => { if(r[t.id]===1) medals[t.id]++; });
+  });
 
   const sorted = [...teams].sort((a,b)=>a.name.localeCompare(b.name));
 
