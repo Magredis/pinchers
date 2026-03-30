@@ -270,8 +270,8 @@ function render() {
   const tAR = rankAvgs(avgData,"tAvg");
 
   let h3 = "<thead><tr><th class='name'>Team</th>";
-  if (batScoring.length) h3 += "<th>B avg</th>";
-  if (pitScoring.length) h3 += "<th>P avg</th>";
+  if (batScoring.length) h3 += "<th>Batting</th>";
+  if (pitScoring.length) h3 += "<th>Pitching</th>";
   h3 += "<th>Total</th></tr></thead><tbody>";
 
   avgData.forEach(t => {
