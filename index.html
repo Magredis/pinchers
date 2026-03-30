@@ -70,9 +70,9 @@ select{padding:5px 10px;border-radius:20px;border:1px solid var(--border);backgr
 
 <div class="legend">
   <span><span class="leg-box" style="background:var(--gold)"></span> 1st (gold)</span>
-  <span><span class="leg-box" style="background:#6d28d9"></span> 2nd–3rd</span>
-  <span><span class="leg-box" style="background:#a78bfa"></span> Mid</span>
-  <span><span class="leg-box" style="background:#ede9fe"></span> Low</span>
+  <span><span class="leg-box" style="background:#bbe8c3"></span> 2nd–3rd</span>
+  <span><span class="leg-box" style="background:#d8eedd"></span> Mid</span>
+  <span><span class="leg-box" style="background:#f0c8c8"></span> Low</span>
   <span><span class="leg-box" style="background:var(--card);border-color:var(--border)"></span> Last</span>
 </div>
 
@@ -133,19 +133,19 @@ function getRanks(teams, sid) {
 }
 
 function colorForRank(rank, n) {
-  if (rank === 1) return dark() ? "rgba(251,191,36,0.25)" : "rgba(245,158,11,0.2)";
-  if (rank === n) return "transparent";
+  if (rank === 1) return dark() ? "rgba(251,191,36,0.3)" : "rgba(245,158,11,0.22)";
+  if (n <= 2) return "transparent";
   const t = (rank - 2) / (n - 2);
   if (dark()) {
-    const r = Math.round(109 - t * 80);
-    const g = Math.round(40 - t * 20);
-    const b = Math.round(217 - t * 180);
-    const a = (0.35 - t * 0.3).toFixed(2);
+    const r = Math.round(74 + t * (180 - 74));
+    const g = Math.round(180 - t * (180 - 74));
+    const b = Math.round(100 + t * (100 - 100));
+    const a = (0.3 - t * 0.05).toFixed(2);
     return `rgba(${r},${g},${b},${a})`;
   } else {
-    const r = Math.round(109 + t * (250 - 109));
-    const g = Math.round(40 + t * (245 - 40));
-    const b = Math.round(217 + t * (255 - 217));
+    const r = Math.round(187 + t * (252 - 187));
+    const g = Math.round(232 + t * (200 - 232));
+    const b = Math.round(195 + t * (200 - 195));
     return `rgb(${r},${g},${b})`;
   }
 }
