@@ -403,7 +403,7 @@ function simAllMatchups(team, allTeams) {
 }
 
 let powerSortCol = "season";
-let powerSortDir = -1; // -1 = best first
+let powerSortDir = 1; // 1 = best first
 
 function renderPower() {
   const weekKeys = Object.keys(WEEKS_DATA).filter(k=>k!=="season"&&WEEKS_DATA[k]).sort((a,b)=>parseInt(a)-parseInt(b));
@@ -465,7 +465,7 @@ function renderPower() {
 
   const sortIcon = (col) => {
     if (powerSortCol !== col) return ' <span style="opacity:0.3;font-size:8px">▼</span>';
-    return powerSortDir === -1 ? ' <span style="font-size:8px">▼</span>' : ' <span style="font-size:8px">▲</span>';
+    return powerSortDir === 1 ? ' <span style="font-size:8px">▼</span>' : ' <span style="font-size:8px">▲</span>';
   };
 
   let h = `<thead><tr><th style="text-align:left;width:30px">#</th><th style="text-align:left;min-width:170px">Team</th><th style="background:var(--bg2);cursor:pointer" onclick="togglePowerSort('season')" class="sortable">Season${sortIcon("season")}</th>`;
