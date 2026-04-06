@@ -91,6 +91,33 @@ def parse_standings(data):
     return teams, current_week
 
 
+def fetch_week_stats(token, week):
+    """Fetch per-team stats for a specific week."""
+    print(f"Fetching stats for week {week}...")
+    data = yahoo_api(
+        token,
+        f"/league/{GAME_KEY}.l.{LEAGUE_ID}/teams/stats;type=week;week={week}"
+    )
+
+    teams_data = data["fantasy_content"]["league"][1]["teams"]
+    count = teams_data.get("count", 0)
+    week_stats = {}  # team_id -> stats dict
+
+    for i in range(count):
+        t = teams_data[str(i)]["team"]
+        _, team_id, _, _ = parse_team(t[0])
+        team_id = int(team_id)
+
+        stats = {}
+        for s in t[1].get("team_stats", {}).get("stats", []):
+            if "stat" in s:
+                stats[s["stat"]["stat_id"]] = s["stat"]["value"]
+
+        week_stats[team_id] = stats
+
+    return week_stats
+
+
 def load_data():
     if os.path.exists(DATA_FILE):
         with open(DATA_FILE, "r", encoding="utf-8") as f:
@@ -165,7 +192,7 @@ def main():
 
     print("Fetching standings...")
     standings_data = yahoo_api(access_token, f"/league/{GAME_KEY}.l.{LEAGUE_ID}/standings")
-    teams, current_week = parse_standings(standings_data)
+    season_teams, current_week = parse_standings(standings_data)
 
     completed_week = current_week - 1
     if completed_week < 1:
@@ -175,8 +202,35 @@ def main():
     print(f"Current week: {current_week}, saving week: {completed_week}")
 
     data = load_data()
-    data["season"] = teams
-    data[str(completed_week)] = teams
+
+    # Always update season total from standings (cumulative)
+    data["season"] = season_teams
+
+    # Fetch per-week stats only for weeks not yet saved
+    for week in range(1, completed_week + 1):
+        week_key = str(week)
+        if week_key in data:
+            print(f"Week {week} already saved, skipping")
+            continue
+
+        week_stats = fetch_week_stats(access_token, week)
+
+        # Build week entry: start from season_teams for metadata,
+        # replace stats with week-specific stats
+        week_teams = []
+        for team in season_teams:
+            team_week = dict(team)
+            # W/L/T and rank don't apply per-week, clear them
+            team_week["w"] = 0
+            team_week["l"] = 0
+            team_week["t"] = 0
+            team_week["pct"] = ".000"
+            team_week["rank"] = 0
+            team_week["stats"] = week_stats.get(team["id"], {})
+            week_teams.append(team_week)
+
+        data[week_key] = week_teams
+        print(f"Saved week {week}")
 
     save_data(data)
     print(f"Saved to {DATA_FILE}")
