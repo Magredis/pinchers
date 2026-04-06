@@ -63,5 +63,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -A
-          git diff --staged --quiet || git commit -m "Update fantasy data $(date +%Y-%m-%d)"
+          # Commit data changes if any, otherwise make a keepalive empty commit
+          if git diff --staged --quiet; then
+            git commit --allow-empty -m "keepalive $(date +%Y-%m-%d)"
+          else
+            git commit -m "Update fantasy data $(date +%Y-%m-%d)"
+          fi
           git push
