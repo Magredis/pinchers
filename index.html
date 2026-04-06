@@ -229,7 +229,7 @@ function render(){
   const sorted=[...teams].sort((a,b)=>a.name.localeCompare(b.name));
 
   const isSeason=period==="season";
-  let h=`<thead><tr><th class='name'>Team</th>${isSeason?"<th>W-L-T</th>":""}<th class='sec' colspan='${BAT.length}'>Batting</th><th class='sec' colspan='${PIT.length}'>Pitching</th><th>🏅</th></tr><tr><th class='name'></th>${isSeason?"<th>PCT</th>":""}`);
+  let h=`<thead><tr><th class='name'>Team</th>${isSeason?"<th>W-L-T</th>":""}<th class='sec' colspan='${BAT.length}'>Batting</th><th class='sec' colspan='${PIT.length}'>Pitching</th><th>🏅</th></tr><tr><th class='name'></th>${isSeason?"<th>PCT</th>":""}`;  
   ALL_IDS.forEach(s=>h+=`<th>${SM[s]?.n||s}</th>`);
   h+="<th>#1</th></tr></thead><tbody>";
   sorted.forEach(t=>{
